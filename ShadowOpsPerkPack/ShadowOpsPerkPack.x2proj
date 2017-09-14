@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Guid>f3cb20d1-070f-4a4d-becc-740e5f2c4bb2</Guid>
+    <Name>Shadow Ops Perk Pack</Name>
+    <Description>Shadow Ops class pack for War of the Chosen</Description>
+    <SteamPublishID>0</SteamPublishID>
+    <AssemblyName>ShadowOpsPerkPack</AssemblyName>
+    <RootNamespace>ShadowOpsPerkPack</RootNamespace>
+  </PropertyGroup>
+	<ItemGroup>
+		<Content Include="Config\**\*.ini">
+			<SubType>Content</SubType>
+		</Content>
+		<Content Include="Content\*.upk">
+			<SubType>Content</SubType>
+		</Content>
+		<Content Include="Src\**\Classes\*.uc" Exclude="Src\XComGame\Classes\*.uc">
+			<SubType>Content</SubType>
+		</Content>
+		<None Include="Src\XComGame\Classes\*.uc">
+		</None>
+		<Content Include="ReadMe.txt" />
+		<Content Include="Localization\**\*.int" />
+		<Content Include="Localization\**\*.chn" />
+		<Content Include="Localization\**\*.rus" />
+		<Content Include="ModPreview.jpg" />
+		<Content Include="*.XComMod">
+			<SubType>Content</SubType>
+		</Content>
+	</ItemGroup>
+	<Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
+	<Target Name="RemoveDirectories" BeforeTargets="CreateSymlinks">
+		<RemoveDir Directories="Src\XComGame\" />
+	</Target>
+	<Target Name="CreateSymlinks" BeforeTargets="Build">
+		<Exec Command="mklink /j Src\XComGame &quot;C:\Program Files (x86)\Steam\SteamApps\common\XCOM 2 War of the Chosen SDK\Development\SrcOrig\XComGame&quot;" />
+		<Exec Command="attrib +r Src\XComGame\Classes\*.uc" />
+	</Target>
+	<Target Name="ReplaceModInfo" AfterTargets="Build">
+		<ItemGroup>
+			<ModInfoFiles Include="@(Content)" Condition="'%(Extension)' == '.XComMod'">
+				<TargetDir>$(OutputDir)</TargetDir>
+				<TargetPath>$(OutputDir)%(Filename)%(Extension)</TargetPath>
+			</ModInfoFiles>
+		</ItemGroup>
+		<Message Importance="High" Text="Replacing mod info..." />
+		<Copy SourceFiles="@(ModInfoFiles)" SkipUnchangedFiles="true" DestinationFiles="%(TargetPath)">
+			<Output TaskParameter="CopiedFiles" ItemName="_CopiedFiles" />
+		</Copy>
+	</Target>
+</Project>
