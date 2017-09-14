@@ -1,4 +1,5 @@
-class X2Ability_HunterAbilitySet extends XMBAbility
+class X2Ability_HunterAbilitySet extends XMBAbility 
+	dependson(XMBEffect_ConditionalBonus)
 	config(GameData_SoldierSkills);
 
 var localized string FadePenaltyText, SnapShotPenaltyText, BullseyePenaltyName, BullseyePenaltyText;

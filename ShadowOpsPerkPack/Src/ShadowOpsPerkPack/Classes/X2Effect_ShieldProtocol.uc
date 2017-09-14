@@ -27,7 +27,7 @@ function bool ProvidesDamageImmunity(XComGameState_Effect EffectState, name Dama
 	return (ImmuneTypes.Find(DamageType) != INDEX_NONE);
 }
 
-function int GetDefendingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage, X2Effect_ApplyWeaponDamage WeaponDamageEffect)
+function int GetDefendingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage, X2Effect_ApplyWeaponDamage WeaponDamageEffect, optional XComGameState NewGameState)
 {
 	local XComGameStateHistory History;
 	local XComGameState_Unit SourceUnit;

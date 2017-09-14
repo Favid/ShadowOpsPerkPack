@@ -1,4 +1,5 @@
 class X2Ability_InfantryAbilitySet extends XMBAbility
+	dependson(XMBEffect_ConditionalBonus)
 	config(GameData_SoldierSkills);
 
 var name AlwaysReadyEffectName, FlushEffectName;
