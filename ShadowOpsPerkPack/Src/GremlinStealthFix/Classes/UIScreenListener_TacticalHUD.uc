@@ -36,7 +36,7 @@ static function UpdateGremlinConcealment(XComGameState_Unit SourceUnit, XComGame
 	}
 }
 
-static function EventListenerReturn UpdateGremlinConcealment_Unit(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+static function EventListenerReturn UpdateGremlinConcealment_Unit(Object EventData, Object EventSource, XComGameState GameState, Name EventID, object CallbackData)
 {
 	local XComGameState NewGameState;
 	local XComGameState_Unit SourceUnit;
@@ -73,7 +73,7 @@ static function EventListenerReturn UpdateGremlinConcealment_Unit(Object EventDa
 	return ELR_NoInterrupt;
 }
 
-static function EventListenerReturn UpdateGremlinConcealment_Player(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+static function EventListenerReturn UpdateGremlinConcealment_Player(Object EventData, Object EventSource, XComGameState GameState, Name EventID, object CallbackData)
 {
 	local XComGameState NewGameState;
 	local XComGameState_Unit SourceUnit;
