@@ -23,33 +23,24 @@ static private function TriggerAssociatedEvent(X2Effect_Persistent PersistentEff
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
-	local XComGameState_Unit UnitState;
 	local X2EventManager EventMgr;
-	local XMBGameState_EventProxy Proxy;
-	local XComGameState NewGameState;
 	local Object ListenerObj;
 
 	`Log(string(GetFuncName()));
 
 	EventMgr = `XEVENTMGR;
 
-	NewGameState = EffectGameState.GetParentGameState();
-	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
-
-	Proxy = class'XMBGameState_EventProxy'.static.CreateProxy(EffectGameState, NewGameState);
-	
-	ListenerObj = Proxy;
+	ListenerObj = EffectGameState;
 
 	// Register for the required event
-	Proxy.OnEvent = EventHandler;
-	Proxy.bTriggerOnceOnly = true;
-	EventMgr.RegisterForEvent(ListenerObj, default.EventName, class'XMBGameState_EventProxy'.static.EventHandler, ELD_OnStateSubmitted,, UnitState);	
+	EventMgr.RegisterForEvent(ListenerObj, EventName, EventHandler, ELD_OnStateSubmitted,, UnitState,, EffectGameState);	
 }
 
-static function EventListenerReturn EventHandler(XComGameState_BaseObject SourceState, Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+static function EventListenerReturn EventHandler(Object EventData, Object EventSource, XComGameState GameState, Name EventID, Object CallbackData)
 {
 	local XComGameStateHistory History;
 	local XComGameState_Unit UnitState;
+	local X2EventManager EventMgr;
 	local XComGameState_Ability AbilityState, OverwatchState;
 	local X2Effect_ActivateOverwatch EffectTemplate;
 	local XComGameState_Effect EffectState;
@@ -60,15 +51,17 @@ static function EventListenerReturn EventHandler(XComGameState_BaseObject Source
 	`Log(string(GetFuncName()));
 
 	History = `XCOMHISTORY;
+	EventMgr = `XEVENTMGR;
 
-	EffectState = XComGameState_Effect(SourceState);
+	EffectState = XComGameState_Effect(CallbackData);
 	if (EffectState == none)
 		return ELR_NoInterrupt;
 
+	EffectTemplate = X2Effect_ActivateOverwatch(EffectState.GetX2Effect());
+	EventMgr.UnRegisterFromEvent(CallbackData, EffectTemplate.EventName);
+
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
 	AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.AbilityStateObjectRef.ObjectID));
-
-	EffectTemplate = X2Effect_ActivateOverwatch(EffectState.GetX2Effect());
 
 	foreach EffectTemplate.OverwatchAbilities(AbilityName)
 	{
