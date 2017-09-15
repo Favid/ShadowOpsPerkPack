@@ -9,9 +9,9 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	RegenerationTicked(self, ApplyEffectParameters, NewEffectState, NewGameState, true);
 }
 
-simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
+simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState, out VisualizationActionMetadata ActionMetadata, const name EffectApplyResult)
 {
-	super.AddX2ActionsForVisualization_Tick(VisualizeGameState, BuildTrack, 0, none);
+	super.AddX2ActionsForVisualization_Tick(VisualizeGameState, ActionMetadata, 0, none);
 }
 
 function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_Effect kNewEffectState, XComGameState NewGameState, bool FirstApplication)
