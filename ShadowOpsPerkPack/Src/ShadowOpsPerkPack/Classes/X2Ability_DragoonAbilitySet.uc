@@ -62,7 +62,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(IronWill());
 	Templates.AddItem(SensorOverlays());
 	Templates.AddItem(Supercharge());
-	Templates.AddItem(ReverseEngineering());
 	Templates.AddItem(Scout());
 	Templates.AddItem(Charge());
 	Templates.AddItem(EatThis());
@@ -951,29 +950,6 @@ static function X2AbilityTemplate Supercharge()
 	Effect.BonusCharges = default.SuperchargeChargeBonus;
 
 	return Passive('ShadowOps_Supercharge', "img:///UILibrary_SODragoon.UIPerk_supercharge", false, Effect);
-}
-
-static function X2AbilityTemplate ReverseEngineering()
-{
-	local X2Effect_ReverseEngineering Effect;
-	local XMBCondition_AbilityName Condition;
-	local X2AbilityTemplate Template;
-
-	Effect = new class'X2Effect_ReverseEngineering';
-	Effect.HackBonus = default.ReverseEngineeringHackBonus;
-
-	Template = SelfTargetTrigger('ShadowOps_ReverseEngineering', "img:///UILibrary_SODragoon.UIPerk_reverseengineering", false, Effect, 'AbilityActivated');
-
-	Condition = new class'XMBCondition_AbilityName';
-	Condition.IncludeAbilityNames.AddItem('FinalizeHaywire');
-	Condition.IncludeAbilityNames.AddItem('FinalizeSKULLMINE');
-	Condition.IncludeAbilityNames.AddItem('FinalizeSKULLJACK');
-	Condition.IncludeAbilityNames.AddItem('ShadowOps_PuppetProtocol');
-
-	AddTriggerTargetCondition(Template, Condition);
-	AddIconPassive(Template);
-
-	return Template;
 }
 
 static function X2AbilityTemplate Scout()
