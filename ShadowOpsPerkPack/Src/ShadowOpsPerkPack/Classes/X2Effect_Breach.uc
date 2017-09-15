@@ -9,17 +9,15 @@ struct ExtWeaponDamageValue
 
 var config array<ExtWeaponDamageValue> DamageModifiers;
 
-function WeaponDamageValue GetBonusEffectDamageValue(XComGameState_Ability AbilityState, XComGameState_Item SourceWeapon, StateObjectReference TargetRef)
+function WeaponDamageValue GetBonusEffectDamageValue(XComGameState_Ability AbilityState, XComGameState_Unit SourceUnit, XComGameState_Item SourceWeapon, StateObjectReference TargetRef)
 {
 	local WeaponDamageValue DamageValue;
 	local X2WeaponTemplate WeaponTemplate;
-	local XComGameState_Unit SourceUnit;
 	local XComGameStateHistory History;
 	local int index;
 
 	History = `XCOMHISTORY;
 
-	SourceUnit = XComGameState_Unit(History.GetGameStateForObjectID(AbilityState.OwnerStateObject.ObjectID));
 	if ((SourceWeapon != none) &&
 		(SourceUnit != none))
 	{
