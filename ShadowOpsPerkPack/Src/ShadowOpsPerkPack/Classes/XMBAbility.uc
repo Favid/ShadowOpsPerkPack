@@ -24,7 +24,8 @@
 //  XMBCondition_Dead.uc
 //---------------------------------------------------------------------------------------
 
-class XMBAbility extends X2Ability;
+class XMBAbility extends X2Ability
+	dependson(XMBEffect_ConditionalBonus);
 
 // Used by ActionPointCost and related functions
 enum EActionPointCost
