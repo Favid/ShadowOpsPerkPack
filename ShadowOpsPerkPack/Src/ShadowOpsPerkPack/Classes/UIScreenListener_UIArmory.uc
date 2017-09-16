@@ -170,17 +170,16 @@ static function string GetCharacterGroupNameDescription(name CharacterGroupName)
 
 static function int GetMinimumForceLevel(X2CharacterTemplate Template)
 {
-	local ForceLevelSpawnWeight SpawnWeight;
+	local SpawnDistributionList SpawnList;
+	local SpawnDistributionListEntry SpawnEntry;
 
-	foreach Template.FollowerLevelSpawnWeights(SpawnWeight)
+	foreach class'XComTacticalMissionManager'.default.SpawnDistributionLists(SpawnList)
 	{
-		if (SpawnWeight.SpawnWeight > 0)
-			return SpawnWeight.MinForceLevel;
-	}
-	foreach Template.LeaderLevelSpawnWeights(SpawnWeight)
-	{
-		if (SpawnWeight.SpawnWeight > 0)
-			return SpawnWeight.MinForceLevel;
+		foreach SpawnList.SpawnDistribution(SpawnEntry)
+		{
+			if (SpawnEntry.Template == Template && SpawnEntry.SpawnWeight > 0)
+				return SpawnWeight.MinForceLevel;
+		}
 	}
 
 	return 99;
