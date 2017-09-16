@@ -59,7 +59,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FocusedDefense());
 	Templates.AddItem(LineEmUp());				// Unused
 	Templates.AddItem(ControlledDetonation());	// Unused
-	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Mayhem());
 	Templates.AddItem(Mayhem_LW2());
 	Templates.AddItem(Saboteur());
@@ -767,49 +766,6 @@ static function X2AbilityTemplate ControlledDetonation()
 
 	// TODO: icon
 	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_SOCombatEngineer.UIPerk_controlleddetonation", true, Effect);
-}
-
-static function X2AbilityTemplate DevilsLuck()
-{
-	local X2AbilityTemplate Template;
-
-	// TODO: icon
-	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_SOCombatEngineer.UIPerk_devilsluck", true, new class'X2Effect_DevilsLuck');
-
-	// Add a secondary ability to provide bonuses on the shot
-	AddSecondaryAbility(Template, DevilsLuckTrigger());
-
-	return Template;
-}
-
-static function X2AbilityTemplate DevilsLuckTrigger()
-{
-	local X2AbilityTemplate Template;
-	local X2Effect_SetUnitValue Effect;
-	local XMBCondition_AbilityHitResult HitResultCondition;
-	local X2Condition_Untouchable UntouchableCondition;
-
-	Effect = new class'X2Effect_SetUnitValue';
-	Effect.UnitName = 'DevilsLuckUsed';
-	Effect.NewValueToSet = 1;
-	Effect.CleanupType = eCleanup_BeginTactical;
-
-	// TODO: icon
-	Template = SelfTargetTrigger('ShadowOps_DevilsLuckTrigger', "img:///UILibrary_SOCombatEngineer.UIPerk_devilsluck", false, Effect, 'AbilityActivated', eFilter_None);
-	XMBAbilityTrigger_EventListener(Template.AbilityTriggers[0]).bAsTarget = true;
-
-	HitResultCondition = new class'XMBCondition_AbilityHitResult';
-	HitResultCondition.IncludeHitResults.AddItem(eHit_Untouchable);
-	AddTriggerTargetCondition(Template, HitResultCondition);
-
-	UntouchableCondition = new class'X2Condition_Untouchable';
-	UntouchableCondition.AddCheckValue(0, eCheck_LessThan);
-	AddTriggerTargetCondition(Template, UntouchableCondition);
-
-	// Increment Untouchable so it goes back to 0
-	Template.AddTargetEffect(new class'X2Effect_IncrementUntouchable');
-
-	return Template;
 }
 
 static function X2AbilityTemplate Mayhem()

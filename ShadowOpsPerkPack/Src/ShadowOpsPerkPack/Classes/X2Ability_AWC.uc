@@ -6,7 +6,6 @@ var config int HipFireCooldown;
 var config float AnatomistCritModifier, AnatomistMaxCritModifier;
 var config int WeaponmasterBonusDamage;
 var config int AbsolutelyCriticalCritBonus;
-var config float DevilsLuckHitChanceMultiplier, DevilsLuckCritChanceMultiplier;
 var config int PyromaniacDamageBonus;
 var config int SnakeBloodDodgeBonus;
 var config int RageDuration, RageCharges;
