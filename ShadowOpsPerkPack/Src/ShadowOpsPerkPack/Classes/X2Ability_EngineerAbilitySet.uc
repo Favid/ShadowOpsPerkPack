@@ -426,70 +426,13 @@ static function X2AbilityTemplate ChainReactionFuse()
 	Template.AbilityTargetConditions.AddItem(new class'X2Condition_FuseTarget');	
 
 	Template.PostActivationEvents.AddItem(class'X2ABility_PsiOperativeAbilitySet'.default.FuseEventName);
-	//Template.PostActivationEvents.AddItem(class'X2ABility_PsiOperativeAbilitySet'.default.FusePostEventName);
+	Template.PostActivationEvents.AddItem(class'X2ABility_PsiOperativeAbilitySet'.default.FusePostEventName);
 
-	//Template.bSkipFireAction = true;
+	Template.bSkipFireAction = true;
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.BuildVisualizationFn = ChainReactionFuseVisualization;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 
 	return Template;
-}
-
-simulated function ChainReactionFuseVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
-{
-	local XComGameStateHistory History;
-	local XComGameStateContext_Ability  Context;
-	local StateObjectReference          InteractingUnitRef;
-
-	local VisualizationTrack        EmptyTrack;
-	local VisualizationTrack        BuildTrack;
-
-	local XComGameState_Ability         Ability;
-	local X2Action_PlaySoundAndFlyOver SoundAndFlyOver;
-	local X2Action_SendInterTrackMessage SendMessageAction;
-	local X2Action_Delay			DelayAction;
-
-	History = `XCOMHISTORY;
-
-	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
-	InteractingUnitRef = Context.InputContext.SourceObject;
-
-	//Configure the visualization track for the shooter
-	//****************************************************************************************
-	BuildTrack = EmptyTrack;
-	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
-	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
-	BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
-
-	class'X2Action_SyncVisualizer'.static.AddToVisualizationTrack(BuildTrack, Context);
-
-	DelayAction = X2Action_Delay(class 'X2Action_Delay'.static.AddToVisualizationTrack(BuildTrack, Context));
-	DelayAction.bIgnoreZipMode = true;
-	DelayAction.Duration = 1.2;
-
-	// Send an intertrack message to trigger the fuse explosion
-	SendMessageAction = X2Action_SendInterTrackMessage(class'X2Action_SendInterTrackMessage'.static.AddToVisualizationTrack(BuildTrack, Context));
-	SendMessageAction.SendTrackMessageToRef = Context.InputContext.PrimaryTarget;
-
-	OutVisualizationTracks.AddItem(BuildTrack);
-
-	//Configure the visualization track for the target
-	//****************************************************************************************
-	InteractingUnitRef = Context.InputContext.PrimaryTarget;
-	Ability = XComGameState_Ability(History.GetGameStateForObjectID(Context.InputContext.AbilityRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1));
-	
-	BuildTrack = EmptyTrack;
-	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
-	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
-	BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
-
-	class'X2Action_SyncVisualizer'.static.AddToVisualizationTrack(BuildTrack, Context);
-
-	SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, Context));
-	SoundAndFlyOver.SetSoundAndFlyOverParameters(None, Ability.GetMyTemplate().LocFlyOverText, '', eColor_Bad);
-	
-	OutVisualizationTracks.AddItem(BuildTrack);
 }
 
 static function X2AbilityTemplate Packmaster()

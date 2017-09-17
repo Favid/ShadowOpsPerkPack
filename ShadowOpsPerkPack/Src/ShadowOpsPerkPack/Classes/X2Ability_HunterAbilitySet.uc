@@ -5,7 +5,6 @@ var localized string FadePenaltyText, SnapShotPenaltyText, BullseyePenaltyName, 
 var localized string DisabledFriendlyName, DisabledFriendlyDesc, DisabledEffectAcquiredString, DisabledEffectTickedString, DisabledEffectLostString;
 
 var config int SnapShotHitModifier;
-var config int HunterMarkHitModifier;
 var config int PrecisionOffenseBonus;
 var config int LowProfileDefenseBonus;
 var config int SliceAndDiceHitModifier;
@@ -25,7 +24,7 @@ var config int ThisOnesMineCritBonus, ThisOnesMineDefenseBonus, ThisOnesMineDura
 var config float FearsomeRadius;
 var config int FearsomeBasePanicChance;
 
-var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, DisablingShotCooldown, ThisOnesMineCooldown;
+var config int SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, DisablingShotCooldown, ThisOnesMineCooldown;
 var config int CoverMeCooldown;
 
 var name ThisOnesMineEffectName, DisabledName;
@@ -37,7 +36,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SnapShot());				// Non-LW only
 	Templates.AddItem(SnapShotShot());			// Non-LW only
 	Templates.AddItem(SnapShotOverwatch());		// Non-LW only
-	Templates.AddItem(HunterMark());
 	Templates.AddItem(VitalPoint());
 	Templates.AddItem(Precision());
 	Templates.AddItem(LowProfile());			// Non-LW only
@@ -179,141 +177,6 @@ static function X2AbilityTemplate SnapShotOverwatch()
 	Template.bNoConfirmationWithHotKey = true;
 
 	return Template;	
-}
-
-static function X2DataTemplate HunterMark()
-{
-	local X2AbilityTemplate Template;
-	local X2Condition_UnitProperty UnitPropertyCondition;
-	local X2Condition_Visibility TargetVisibilityCondition;
-	local X2Condition_UnitEffects UnitEffectsCondition;
-	local X2AbilityTarget_Single SingleTarget;
-	local X2AbilityTrigger_PlayerInput InputTrigger;
-	local X2Effect_Persistent MarkedEffect;
-	local X2AbilityCooldown Cooldown;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HunterMark');
-
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
-	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_huntermark";
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.Hostility = eHostility_Offensive;
-
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.HunterMarkCooldown;
-	Template.AbilityCooldown = Cooldown;
-
-	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
-
-	// Stay concealed while using
-	Template.ConcealmentRule = eConceal_Always;
-
-	// The shooter cannot be mind controlled
-	UnitEffectsCondition = new class'X2Condition_UnitEffects';
-	UnitEffectsCondition.AddExcludeEffect(class'X2Effect_MindControl'.default.EffectName, 'AA_UnitIsMindControlled');
-	Template.AbilityShooterConditions.AddItem(UnitEffectsCondition);
-
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-
-	Template.AddShooterEffectExclusions();
-
-	// Target must be an enemy
-	UnitPropertyCondition = new class'X2Condition_UnitProperty';
-	UnitPropertyCondition.ExcludeDead = true;
-	UnitPropertyCondition.ExcludeFriendlyToSource = true;
-	UnitPropertyCondition.RequireWithinRange = false;
-	Template.AbilityTargetConditions.AddItem(UnitPropertyCondition);
-	
-	// Target must be visible and may use squad sight
-	TargetVisibilityCondition = new class'X2Condition_Visibility';
-	TargetVisibilityCondition.bRequireGameplayVisible = true;
-	TargetVisibilityCondition.bAllowSquadsight = true;
-	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
-
-	// Target cannot already be marked
-	UnitEffectsCondition = new class'X2Condition_UnitEffects';
-	UnitEffectsCondition.AddExcludeEffect(class'X2StatusEffects'.default.MarkedName, 'AA_UnitIsMarked');
-	Template.AbilityTargetConditions.AddItem(UnitEffectsCondition);
-
-	// 100% chance to hit
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	SingleTarget = new class'X2AbilityTarget_Single';
-	Template.AbilityTargetStyle = SingleTarget;
-
-	InputTrigger = new class'X2AbilityTrigger_PlayerInput';
-	Template.AbilityTriggers.AddItem(InputTrigger);
-
-	// Create the Marked effect
-	MarkedEffect = CreateMarkedEffect(1, true);
-
-	Template.AddTargetEffect(MarkedEffect); //BMU - changing to an immediate execution for evaluation
-
-	Template.CustomFireAnim = 'HL_SignalPoint';
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = HunterMark_BuildVisualization;
-	Template.CinescriptCameraType = "Mark_Target";
-	
-	Template.bCrossClassEligible = true;
-
-	return Template;
-}
-
-static function X2Effect_PersistentStatChange CreateMarkedEffect(int NumTurns, bool bIsInfinite)
-{
-	local X2Effect_PersistentStatChange MarkedEffect;
-
-	MarkedEffect = new class 'X2Effect_PersistentStatChange';
-	MarkedEffect.EffectName = class'X2StatusEffects'.default.MarkedName;
-	MarkedEffect.DuplicateResponse = eDupe_Ignore;
-	MarkedEffect.AddPersistentStatChange(eStat_Defense, -default.HunterMarkHitModifier);
-	MarkedEffect.BuildPersistentEffect(NumTurns, bIsInfinite, true,,eGameRule_PlayerTurnEnd);
-	MarkedEffect.SetDisplayInfo(ePerkBuff_Penalty, class'X2StatusEffects'.default.MarkedFriendlyName, class'X2StatusEffects'.default.MarkedFriendlyDesc, "img:///UILibrary_PerkIcons.UIPerk_mark");
-	MarkedEffect.VisualizationFn = class'X2StatusEffects'.static.MarkedVisualization;
-	MarkedEffect.EffectTickedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationTicked;
-	MarkedEffect.EffectRemovedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationRemoved;
-	MarkedEffect.bRemoveWhenTargetDies = true;
-	MarkedEffect.bUniqueTarget = true;
-
-	return MarkedEffect;
-}
-
-function HunterMark_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
-{
-	local XComGameState_Effect		EffectState;
-	local VisualizationTrack        EmptyTrack;
-	local VisualizationTrack        BuildTrack;
-	local Actor                     TargetVisualizer;
-	local XComGameStateHistory      History;
-	local name						EffectApplyResult;
-	local X2Effect_Persistent		Effect;
-	local XComGameStateContext_Ability  Context;
-	
-	TypicalAbility_BuildVisualization(VisualizeGameState, OutVisualizationTracks);
-		
-	History = `XCOMHISTORY;
-	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
-
-	//  We are assuming that any removed effects were cleansed by the RemoveEffects. If this turns out to not be a good assumption, something will have to change.
-	foreach VisualizeGameState.IterateByClassType(class'XComGameState_Effect', EffectState)
-	{
-		if (EffectState.bRemoved)
-		{
-			TargetVisualizer = History.GetVisualizer(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID);
-
-			BuildTrack = EmptyTrack;
-			BuildTrack.TrackActor = TargetVisualizer;
-			BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
-			BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID);
-
-			Effect = EffectState.GetX2Effect();
-			EffectApplyResult = Context.FindTargetEffectApplyResult(Effect);
-			Effect.AddX2ActionsForVisualization_Removed(VisualizeGameState, BuildTrack, EffectApplyResult, EffectState);
-
-			OutVisualizationTracks.AddItem(BuildTrack);
-		}
-	}		
 }
 
 static function X2AbilityTemplate VitalPoint()
@@ -863,20 +726,9 @@ static function X2Effect_Persistent BuildRattledEffect(string IconImage, name Ab
 	RattledEffect.AddPersistentStatChange(eStat_Offense, default.BullseyeOffensePenalty);
 	RattledEffect.AddPersistentStatChange(eStat_Defense, default.BullseyeDefensePenalty);
 	RattledEffect.AddPersistentStatChange(eStat_Will, default.BullseyeWillPenalty);
-	RattledEffect.VisualizationFn = RattledVisualization;
+	RattledEffect.VisualizationFn = EffectFlyOver_Visualization;
 
 	return RattledEffect;
-}
-
-static function RattledVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
-{
-	local X2Action_PlaySoundAndFlyOver SoundAndFlyOver;
-	
-	if (EffectApplyResult == 'AA_Success')
-	{
-		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
-		SoundAndFlyOver.SetSoundAndFlyOverParameters(None, default.BullseyePenaltyName, '', eColor_Bad);
-	}
 }
 
 static function X2AbilityTemplate FirstStrike()
@@ -1080,25 +932,27 @@ static function X2Effect_Persistent CreateDisabledStatusEffect()
 	return DisabledEffect;
 }
 
-static function DisabledVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
+static function DisabledVisualization(XComGameState VisualizeGameState, out VisualizationActionMetadata ActionMetadata, name EffectApplyResult)
 {
-	local XComGameState_Unit TargetState;
+	local X2Action_UpdateFOW FOWUpdate;
 
-	if( EffectApplyResult != 'AA_Success' )
+	super.AddX2ActionsForVisualization(VisualizeGameState, ActionMetadata, EffectApplyResult);
+
+	if( (EffectApplyResult == 'AA_Success') &&
+		(XComGameState_Unit(ActionMetadata.StateObject_NewState) != none) )
 	{
-		return;
+		class'X2StatusEffects'.static.AddEffectSoundAndFlyOverToTrack(ActionMetadata, VisualizeGameState.GetContext(), default.DisabledFriendlyName, '', eColor_Bad, "img:///UILibrary_PerkIcons.UIPerk_disablingshot");
+		class'X2StatusEffects'.static.AddEffectMessageToTrack(ActionMetadata,
+															  default.DisabledEffectAcquiredString,
+															  VisualizeGameState.GetContext(),
+															  default.DisabledFriendlyName,
+															  "img:///UILibrary_PerkIcons.UIPerk_disablingshot",
+															  eUIState_Bad);
+		class'X2StatusEffects'.static.UpdateUnitFlag(ActionMetadata, VisualizeGameState.GetContext());
 	}
-
-	TargetState = XComGameState_Unit(VisualizeGameState.GetGameStateForObjectID(BuildTrack.StateObject_NewState.ObjectID));
-	if (TargetState == none)
-		return;
-
-	class'X2StatusEffects'.static.AddEffectSoundAndFlyOverToTrack(BuildTrack, VisualizeGameState.GetContext(), default.DisabledFriendlyName, '', eColor_Bad, "img:///UILibrary_PerkIcons.UIPerk_disablingshot");
-	class'X2StatusEffects'.static.AddEffectMessageToTrack(BuildTrack, default.DisabledEffectAcquiredString, VisualizeGameState.GetContext());
-	class'X2StatusEffects'.static.UpdateUnitFlag(BuildTrack, VisualizeGameState.GetContext());
 }
 
-static function DisabledVisualizationTicked(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
+static function DisabledVisualizationTicked(XComGameState VisualizeGameState, out VisualizationActionMetadata BuildTrack, const int TickIndex, XComGameState_Effect EffectState)
 {
 	local XComGameState_Unit UnitState;
 
@@ -1106,19 +960,28 @@ static function DisabledVisualizationTicked(XComGameState VisualizeGameState, ou
 	if (UnitState == none)
 		return;
 
-	// dead units should not be reported
+	// dead units should not be reported, nor civilians
 	if( !UnitState.IsAlive() )
 	{
 		return;
 	}
 
-	class'X2StatusEffects'.static.AddEffectCameraPanToAffectedUnitToTrack(BuildTrack, VisualizeGameState.GetContext());
-	class'X2StatusEffects'.static.AddEffectSoundAndFlyOverToTrack(BuildTrack, VisualizeGameState.GetContext(), default.DisabledFriendlyName, '', eColor_Bad, "img:///UILibrary_PerkIcons.UIPerk_disablingshot");
-	class'X2StatusEffects'.static.AddEffectMessageToTrack(BuildTrack, default.DisabledEffectTickedString, VisualizeGameState.GetContext());
+	if( !UnitState.IsCivilian() )
+	{
+		class'X2StatusEffects'.static.AddEffectCameraPanToAffectedUnitToTrack(BuildTrack, VisualizeGameState.GetContext());
+		class'X2StatusEffects'.static.AddEffectSoundAndFlyOverToTrack(BuildTrack, VisualizeGameState.GetContext(), default.DisabledFriendlyName, 'PanickedBreathing', eColor_Bad, "img:///UILibrary_PerkIcons.UIPerk_disablingshot");
+		class'X2StatusEffects'.static.AddEffectMessageToTrack(BuildTrack,
+															  default.DisabledEffectTickedString,
+															  VisualizeGameState.GetContext(),
+															  default.DisabledFriendlyName,
+															  "img:///UILibrary_PerkIcons.UIPerk_disablingshot",
+															  eUIState_Warning);
+	}
+
 	class'X2StatusEffects'.static.UpdateUnitFlag(BuildTrack, VisualizeGameState.GetContext());
 }
 
-static function DisabledVisualizationRemoved(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
+static function DisabledVisualizationRemoved(XComGameState VisualizeGameState, out VisualizationActionMetadata BuildTrack, const name EffectApplyResult, XComGameState_Effect RemovedEffect)
 {
 	local XComGameState_Unit UnitState;
 
@@ -1126,13 +989,19 @@ static function DisabledVisualizationRemoved(XComGameState VisualizeGameState, o
 	if (UnitState == none)
 		return;
 
-	// dead units should not be reported
-	if( !UnitState.IsAlive() )
+	// dead units should not be reported. Also, rescued civilians should not display the fly-over.
+	if( !UnitState.IsAlive() || UnitState.bRemovedFromPlay )
 	{
 		return;
 	}
 
-	class'X2StatusEffects'.static.AddEffectMessageToTrack(BuildTrack, default.DisabledEffectLostString, VisualizeGameState.GetContext());
+	class'X2StatusEffects'.static.AddEffectSoundAndFlyOverToTrack(BuildTrack, VisualizeGameState.GetContext(), EffectLostFriendlyName, '', eColor_Good, "img:///UILibrary_PerkIcons.UIPerk_disablingshot", 2.0f);
+	class'X2StatusEffects'.static.AddEffectMessageToTrack(BuildTrack,
+														  default.DisabledEffectLostString,
+														  VisualizeGameState.GetContext(),
+														  default.DisabledFriendlyName,
+														  "img:///UILibrary_PerkIcons.UIPerk_disablingshot",
+														  eUIState_Good);
 	class'X2StatusEffects'.static.UpdateUnitFlag(BuildTrack, VisualizeGameState.GetContext());
 }
 
