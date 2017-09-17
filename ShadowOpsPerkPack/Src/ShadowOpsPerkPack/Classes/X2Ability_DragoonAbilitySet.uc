@@ -726,7 +726,7 @@ static function X2AbilityTemplate RestorationProtocol()
 
 	StandUpEffect = new class'X2Effect_Persistent';
 	StandUpEffect.BuildPersistentEffect(1);
-	StandUpEffect.VisualizationFn = UnconsciousVisualizationRemoved;
+	StandUpEffect.VisualizationFn = class'X2StatusEffects'.static.UnconsciousVisualizationRemoved;
 	Template.AddTargetEffect(StandUpEffect);
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
@@ -743,21 +743,6 @@ static function X2AbilityTemplate RestorationProtocol()
 	Template.bCrossClassEligible = false;
 
 	return Template;
-}
-
-static function UnconsciousVisualizationRemoved(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
-{
-	local XComGameState_Unit UnitState;
-
-	UnitState = XComGameState_Unit(BuildTrack.StateObject_NewState);
-
-	if( UnitState == none)
-		return;
-
-	if (!XGUnit(UnitState.GetVisualizer()).GetPawn().bFinalRagdoll)
-		return;
-
-	class 'X2StatusEffects'.static.UnconsciousVisualizationRemoved(VisualizeGameState, BuildTrack, EffectApplyResult);
 }
 
 static function X2AbilityTemplate StasisField()
