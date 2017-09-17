@@ -21,7 +21,7 @@ var config int ZoneOfControlLW2Shots;
 var config name FreeAmmoForPocket;
 
 var config int FullAutoActions;
-var config int FullAutoCooldown, ZoneOfControlCooldown, ZoneOfControlLW2Cooldown, FlushCooldown;
+var config int FullAutoCooldown, ZoneOfControlCooldown, ZoneOfControlLW2Cooldown;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -341,7 +341,7 @@ static function X2AbilityTemplate FullAuto2()
 	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_fullauto";
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = FullAuto_BuildVisualization;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_FullAuto2');
@@ -368,101 +368,6 @@ static function X2Effect_Persistent FullAutoPenalty()
 	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	return Effect;
-}
-
-simulated function FullAuto_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
-{
-	local XComGameStateContext_Ability AbilityContext;
-	local XComGameStateContext Context;
-	local XComGameStateContext_Ability TestAbilityContext;
-	local int EventChainIndex, TrackIndex, ActionIndex;
-	local XComGameStateHistory History;
-	local X2Action_EnterCover EnterCoverAction;
-	local X2Action_EndCinescriptCamera EndCinescriptCameraAction;
-	local X2Action_ExitCover ExitCoverAction;
-	local X2Action_StartCinescriptCamera StartCinescriptCameraAction;
-	local bool bFoundThisAction, bSkipExitCover, bSkipEnterCover;
-
-	// Build the first shot of Rapid Fire's visualization
-	TypicalAbility_BuildVisualization(VisualizeGameState, OutVisualizationTracks);
-
-	Context = VisualizeGameState.GetContext();
-	AbilityContext = XComGameStateContext_Ability(Context);
-
-	if( AbilityContext.EventChainStartIndex != 0 )
-	{
-		History = `XCOMHISTORY;
-
-		// This GameState is part of a chain, which means there may be a second shot for rapid fire
-		for( EventChainIndex = AbilityContext.EventChainStartIndex; !Context.bLastEventInChain; ++EventChainIndex )
-		{
-			Context = History.GetGameStateFromHistory(EventChainIndex).GetContext();
-			TestAbilityContext = XComGameStateContext_Ability(Context);
-
-			if (TestAbilityContext.AssociatedState.HistoryIndex == AbilityContext.AssociatedState.HistoryIndex)
-			{
-				bFoundThisAction = true;
-				continue;
-			}
-
-			if( (TestAbilityContext.InputContext.AbilityTemplateName == 'ShadowOps_FullAuto' ||
-				 TestAbilityContext.InputContext.AbilityTemplateName == 'ShadowOps_FullAuto2') &&
-				TestAbilityContext.InputContext.SourceObject.ObjectID == AbilityContext.InputContext.SourceObject.ObjectID &&
-				TestAbilityContext.InputContext.PrimaryTarget.ObjectID == AbilityContext.InputContext.PrimaryTarget.ObjectID )
-			{
-				if (bFoundThisAction)
-					bSkipEnterCover = true;
-				else
-					bSkipExitCover = true;
-			}
-		}
-
-		if (bSkipEnterCover)
-		{
-			for( TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex )
-			{
-				if( OutVisualizationTracks[TrackIndex].StateObject_NewState.ObjectID == AbilityContext.InputContext.SourceObject.ObjectID)
-				{
-					// Found the Source track
-					break;
-				}
-			}
-
-			for( ActionIndex = OutVisualizationTracks[TrackIndex].TrackActions.Length - 1; ActionIndex >= 0; --ActionIndex )
-			{
-				EnterCoverAction = X2Action_EnterCover(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
-				EndCinescriptCameraAction = X2Action_EndCinescriptCamera(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
-				if ( (EnterCoverAction != none) ||
-						(EndCinescriptCameraAction != none) )
-				{
-					OutVisualizationTracks[TrackIndex].TrackActions.Remove(ActionIndex, 1);
-				}
-			}
-		}
-
-		if (bSkipExitCover)
-		{
-			for( TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex )
-			{
-				if( OutVisualizationTracks[TrackIndex].StateObject_NewState.ObjectID == AbilityContext.InputContext.SourceObject.ObjectID)
-				{
-					// Found the Source track
-					break;
-				}
-			}
-
-			for( ActionIndex = OutVisualizationTracks[TrackIndex].TrackActions.Length - 1; ActionIndex >= 0; --ActionIndex )
-			{
-				ExitCoverAction = X2Action_ExitCover(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
-				StartCinescriptCameraAction = X2Action_StartCinescriptCamera(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
-				if ( (ExitCoverAction != none) ||
-						(StartCinescriptCameraAction != none) )
-				{
-					OutVisualizationTracks[TrackIndex].TrackActions.Remove(ActionIndex, 1);
-				}
-			}
-		}
-	}
 }
 
 static function X2AbilityTemplate ZoneOfControl()
@@ -806,24 +711,6 @@ static function X2AbilityTemplate ZeroIn()
 	return Passive('ShadowOps_ZeroIn', "img:///UILibrary_SOInfantry.UIPerk_goodeye", true, ZeroInEffect);
 }
 
-function FlushShot_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
-{		
-	local XComGameStateContext_Ability  Context;
-	local AbilityInputContext           AbilityContext;
-	local XComGameState_Unit			OldTargetState;
-	local XComGameStateHistory			History;
-
-	History = `XCOMHISTORY;
-	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
-	AbilityContext = Context.InputContext;
-
-	OldTargetState = XComGameState_Unit(History.GetGameStateForObjectID(AbilityContext.PrimaryTarget.ObjectID,, VisualizeGameState.HistoryIndex - 1));
-
-	// Don't show any visualization if the target is dead
-	if (OldTargetState != none && OldTargetState.IsAlive())
-		TypicalAbility_BuildVisualization(VisualizeGameState, OutVisualizationTracks);
-}
-
 static function X2AbilityTemplate RifleSuppression()
 {
 	local X2AbilityTemplate                 Template;	
@@ -876,8 +763,7 @@ static function X2AbilityTemplate RifleSuppression()
 	Template.AssociatedPassives.AddItem('HoloTargeting');
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = SuppressionBuildVisualization;
-	// Template.BuildVisualizationFn = class'X2Ability_GrenadierAbilitySet'.static.SuppressionBuildVisualization;
+	Template.BuildVisualizationFn = class'X2Ability_GrenadierAbilitySet'.static.SuppressionBuildVisualization;
 	Template.BuildAppliedVisualizationSyncFn = class'X2Ability_GrenadierAbilitySet'.static.SuppressionBuildVisualizationSync;
 	Template.CinescriptCameraType = "StandardSuppression";
 
@@ -886,66 +772,6 @@ static function X2AbilityTemplate RifleSuppression()
 	AddSecondaryAbility(Template, RifleSuppressionBonus());
 
 	return Template;	
-}
-
-// Stolen from Divine Lucubration's Suppression Visualization Fix mod
-static simulated function SuppressionBuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
-{
-	local XComGameStateHistory			History;
-	local XComGameStateContext_Ability	Context;
-	local StateObjectReference			InteractingUnitRef;
-
-	local VisualizationTrack			EmptyTrack;
-	local VisualizationTrack			BuildTrack;
-
-	local XComGameState_Ability			Ability;
-	local X2Action_PlaySoundAndFlyOver	SoundAndFlyOver;
-
-	local XComUnitPawn					UnitPawn;
-	local XComWeapon					Weapon;
-
-	History = `XCOMHISTORY;
-
-	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
-	InteractingUnitRef = Context.InputContext.SourceObject;
-
-	//Configure the visualization track for the shooter
-	//****************************************************************************************
-	BuildTrack = EmptyTrack;
-	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
-	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
-	BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
-
-	// Check the actor's pawn and weapon, see if they can play the suppression effect
-	UnitPawn = XGUnit(BuildTrack.TrackActor).GetPawn();
-	Weapon = XComWeapon(UnitPawn.Weapon);
-	if (Weapon != None &&
-		!UnitPawn.GetAnimTreeController().CanPlayAnimation(Weapon.WeaponSuppressionFireAnimSequenceName) &&
-		!UnitPawn.GetAnimTreeController().CanPlayAnimation(class'XComWeapon'.default.WeaponSuppressionFireAnimSequenceName))
-	{
-		// The unit can't play their weapon's suppression effect. Replace it with the normal fire effect so at least they'll look like they're shooting
-		Weapon.WeaponSuppressionFireAnimSequenceName = Weapon.WeaponFireAnimSequenceName;
-	}
-	
-	class'X2Action_ExitCover'.static.AddToVisualizationTrack(BuildTrack, Context);
-	class'X2Action_StartSuppression'.static.AddToVisualizationTrack(BuildTrack, Context);
-	OutVisualizationTracks.AddItem(BuildTrack);
-	//****************************************************************************************
-	//Configure the visualization track for the target
-	InteractingUnitRef = Context.InputContext.PrimaryTarget;
-	Ability = XComGameState_Ability(History.GetGameStateForObjectID(Context.InputContext.AbilityRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1));
-	BuildTrack = EmptyTrack;
-	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
-	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
-	BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
-	SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, Context));
-	SoundAndFlyOver.SetSoundAndFlyOverParameters(None, Ability.GetMyTemplate().LocFlyOverText, '', eColor_Bad);
-	if (XComGameState_Unit(BuildTrack.StateObject_OldState).ReserveActionPoints.Length != 0 && XComGameState_Unit(BuildTrack.StateObject_NewState).ReserveActionPoints.Length == 0)
-	{
-		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, Context));
-		SoundAndFlyOver.SetSoundAndFlyOverParameters(none, class'XLocalizedData'.default.OverwatchRemovedMsg, '', eColor_Bad);
-	}
-	OutVisualizationTracks.AddItem(BuildTrack);
 }
 
 static function X2AbilityTemplate RifleSuppressionBonus()
@@ -1186,87 +1012,13 @@ static function X2AbilityTemplate SecondWindTrigger()
 	Condition.IncludeAbilityNames = class'TemplateEditors_Infantry'.default.MedikitAbilities;
 	AddTriggerTargetCondition(Template, Condition);
 
-	Template.BuildVisualizationFn = SecondWind_BuildVisualization;
+	//Template.BuildVisualizationFn = SecondWind_BuildVisualization;
 	Template.bSkipFireAction = true;
+	Template.bShowActivation = true;
 
 	HidePerkIcon(Template);
 
 	return Template;
-}
-
-// This visualizer plays a flyover over each target.
-function SecondWind_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
-{		
-	local X2AbilityTemplate             AbilityTemplate;
-	local XComGameStateContext_Ability  Context;
-	local AbilityInputContext           AbilityContext;
-	
-	local Actor                     TargetVisualizer;
-	local int                       TargetIndex;
-
-	local VisualizationTrack        EmptyTrack;
-	local VisualizationTrack        BuildTrack;
-	local int						TrackIndex;
-	local bool						bAlreadyAdded;
-	local XComGameStateHistory      History;
-
-	local X2Action_PlaySoundAndFlyOver SoundAndFlyover;
-
-	History = `XCOMHISTORY;
-	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
-	AbilityContext = Context.InputContext;
-	AbilityTemplate = class'XComGameState_Ability'.static.GetMyTemplateManager().FindAbilityTemplate(AbilityContext.AbilityTemplateName);
-
-	//Configure the visualization track for the target(s). This functionality uses the context primarily
-	//since the game state may not include state objects for misses.
-	//****************************************************************************************	
-	if (AbilityTemplate.AbilityTargetEffects.Length > 0 &&			//There are effects to apply
-		AbilityContext.PrimaryTarget.ObjectID > 0)				//There is a primary target
-	{
-		TargetVisualizer = History.GetVisualizer(AbilityContext.PrimaryTarget.ObjectID);
-
-		BuildTrack = EmptyTrack;
-		BuildTrack.TrackActor = TargetVisualizer;
-		BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(AbilityContext.PrimaryTarget.ObjectID);
-		BuildTrack.StateObject_NewState = BuildTrack.StateObject_OldState;
-
-		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, Context));
-		SoundAndFlyOver.SetSoundAndFlyOverParameters(none, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
-
-		OutVisualizationTracks.AddItem(BuildTrack);
-	}
-
-	//  Apply effects to multi targets
-	if( AbilityTemplate.AbilityMultiTargetEffects.Length > 0 && AbilityContext.MultiTargets.Length > 0)
-	{
-		for( TargetIndex = 0; TargetIndex < AbilityContext.MultiTargets.Length; ++TargetIndex )
-		{	
-			//Some abilities add the same target multiple times into the targets list - see if this is the case and avoid adding redundant tracks
-			bAlreadyAdded = false;
-			for( TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex )
-			{
-				if( OutVisualizationTracks[TrackIndex].StateObject_NewState.ObjectID == AbilityContext.MultiTargets[TargetIndex].ObjectID )
-				{
-					bAlreadyAdded = true;
-				}
-			}
-
-			if( !bAlreadyAdded )
-			{
-				TargetVisualizer = History.GetVisualizer(AbilityContext.MultiTargets[TargetIndex].ObjectID);
-
-				BuildTrack = EmptyTrack;
-				BuildTrack.TrackActor = TargetVisualizer;
-				BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(AbilityContext.MultiTargets[TargetIndex].ObjectID);
-				BuildTrack.StateObject_NewState = BuildTrack.StateObject_OldState;
-
-				SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, Context));
-				SoundAndFlyOver.SetSoundAndFlyOverParameters(none, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
-
-				OutVisualizationTracks.AddItem(BuildTrack);
-			}
-		}
-	}
 }
 
 static function X2AbilityTemplate Tactician()
@@ -1798,9 +1550,4 @@ function ZoneOfControlOverwatchShotTaken_BuildVisualization(XComGameState Visual
 	}
 
 	OutVisualizationTracks.AddItem(BuildTrack);
-}
-
-DefaultProperties
-{
-	FlushEffectName = "FlushTarget";
 }
