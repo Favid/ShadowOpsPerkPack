@@ -12,17 +12,6 @@ var XComWeapon	PreviousWeapon;*/
 var XComUnitPawn FocusUnitPawn;
 //*************************************
 
-function Init(const out VisualizationTrack InTrack)
-{
-	super.Init(InTrack);
-
-	// don't have a weapon
-	/*if( AbilityContext.InputContext.ItemObject.ObjectID > 0 )
-	{
-		UseWeapon = XGWeapon(`XCOMHISTORY.GetGameStateForObjectID( AbilityContext.InputContext.ItemObject.ObjectID ).GetVisualizer());
-	}*/	
-}
-
 function bool CheckInterrupted()
 {
 	return false;
