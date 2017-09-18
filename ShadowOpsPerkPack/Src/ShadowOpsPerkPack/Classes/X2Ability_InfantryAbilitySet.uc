@@ -1200,7 +1200,7 @@ static function X2AbilityTemplate Airstrike()
 }
 
 // Courtesy of robojumper
-static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGameState)
 {
         local XComGameStateHistory History;
         local XComGameStateContext_Ability Context;
@@ -1209,8 +1209,8 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
         local XComGameState_Ability AbilityState;
         local X2AbilityTemplate AbilityTemplate;
         
-        local VisualizationTrack EmptyTrack;
-        local VisualizationTrack BuildTrack;
+        local VisualizationActionMetadata EmptyTrack;
+        local VisualizationActionMetadata BuildTrack;
         local X2Action_PlayAnimation PlayAnimation;
         local X2VisualizerInterface TargetVisualizerInterface;
         local int i, j;
@@ -1250,9 +1250,6 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
         class'X2Action_EnterCover'.static.AddToVisualizationTrack(BuildTrack, Context);
 
 
-        OutVisualizationTracks.AddItem( BuildTrack );
-        
-
         //****************************************************************************************
 
         //****************************************************************************************
@@ -1279,11 +1276,6 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
                         //Allow the visualizer to do any custom processing based on the new game state. For example, units will create a death action when they reach 0 HP.
                         TargetVisualizerInterface.BuildAbilityEffectsVisualization(VisualizeGameState, BuildTrack);
                 }
-
-                if( BuildTrack.TrackActions.Length > 0 )
-                {
-                        OutVisualizationTracks.AddItem(BuildTrack);
-                }
         }
         //****************************************************************************************
 
@@ -1299,7 +1291,6 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
                 BuildTrack.TrackActor = class'XComGameStateHistory'.static.GetGameStateHistory().GetVisualizer(DamageEventStateObject.ObjectID);
                 class'X2Action_WaitForAbilityEffect'.static.AddToVisualizationTrack(BuildTrack, Context);
                 class'X2Action_ApplyWeaponDamageToTerrain'.static.AddToVisualizationTrack(BuildTrack, Context);
-                OutVisualizationTracks.AddItem( BuildTrack );
         }
         //****************************************************************************************
 
@@ -1514,17 +1505,16 @@ simulated function XComGameState ZoneOfControlOverwatchShotTaken_BuildGameState(
 	return NewGameState;
 }
 
-function ZoneOfControlOverwatchShotTaken_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+function ZoneOfControlOverwatchShotTaken_BuildVisualization(XComGameState VisualizeGameState)
 {		
 	local X2AbilityTemplate             AbilityTemplate;
 	local XComGameStateContext_Ability  Context;
 	local AbilityInputContext           AbilityContext;
 	
-	local Actor                     TargetVisualizer;
+	local Actor							TargetVisualizer;
 
-	local VisualizationTrack        EmptyTrack;
-	local VisualizationTrack        BuildTrack;
-	local XComGameStateHistory      History;
+	local VisualizationActionMetadata   BuildTrack;
+	local XComGameStateHistory			History;
 
 	local X2Action_PlaySoundAndFlyOver SoundAndFlyover;
 
@@ -1538,7 +1528,6 @@ function ZoneOfControlOverwatchShotTaken_BuildVisualization(XComGameState Visual
 	//****************************************************************************************	
 	TargetVisualizer = History.GetVisualizer(AbilityContext.SourceObject.ObjectID);
 
-	BuildTrack = EmptyTrack;
 	BuildTrack.TrackActor = TargetVisualizer;
 	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(AbilityContext.SourceObject.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
 	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(AbilityContext.SourceObject.ObjectID);
@@ -1548,6 +1537,4 @@ function ZoneOfControlOverwatchShotTaken_BuildVisualization(XComGameState Visual
 		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, Context));
 		SoundAndFlyOver.SetSoundAndFlyOverParameters(none, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
 	}
-
-	OutVisualizationTracks.AddItem(BuildTrack);
 }
