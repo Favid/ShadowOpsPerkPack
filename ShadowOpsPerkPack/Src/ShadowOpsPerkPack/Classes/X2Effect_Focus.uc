@@ -42,7 +42,7 @@ function bool ChangeHitResultForAttacker(XComGameState_Unit Attacker, XComGameSt
 	return false;
 }
 
-function static EventListenerReturn FocusListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function static EventListenerReturn FocusListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID, object CallbackData)
 {
 	local XComGameState_Ability AbilityState;
 	local XComGameState_Unit SourceUnit;

@@ -70,7 +70,7 @@ function static UpdateAIControl()
 	}
 }
 
-function static EventListenerReturn AIControlListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function static EventListenerReturn AIControlListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID, object CallbackData)
 {
 	`Log("AIControlListener("$EventID$")");
 

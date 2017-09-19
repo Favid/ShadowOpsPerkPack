@@ -33,7 +33,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	}
 }
 
-function static EventListenerReturn ZeroInListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function static EventListenerReturn ZeroInListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID, object CallbackData)
 {
 	local XComGameState_Ability AbilityState;
 	local XComGameStateContext_Ability AbilityContext;

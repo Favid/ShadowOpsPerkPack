@@ -135,7 +135,7 @@ function InitListeners()
 	EventMgr.RegisterForEvent(ThisObj, 'KillMail', OnKillMail, ELD_OnStateSubmitted,,, true);
 }
 
-function EventListenerReturn OnKillMail(Object EventData, Object EventSource, XComGameState GameState, Name InEventID)
+function EventListenerReturn OnKillMail(Object EventData, Object EventSource, XComGameState GameState, Name InEventID, object CallbackData)
 {
 	local XComGameState_Unit UnitState;
 	local XComGameState_KillTracker Tracker;
