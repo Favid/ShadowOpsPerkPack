@@ -19,6 +19,9 @@
     <Content Include="Src\**\Classes\*.uc" Exclude="Src\XComGame\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="TODO.txt">
+      <SubType>Content</SubType>
+    </Content>
     <None Include="Src\XComGame\Classes\*.uc">
     </None>
     <Content Include="ReadMe.txt" />

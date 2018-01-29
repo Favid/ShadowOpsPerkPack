@@ -1,0 +1,2 @@
+GremlinStealthFix/Classes/UIScreenListener_TacticalHUD
+	Change to use WotC event listener
