@@ -12,6 +12,8 @@ function Update(float DeltaTime)
 	local bool GoodView;
 	local CachedCoverAndPeekData PeekData;
 	local array<TTile> Tiles;
+	local GameRulesCache_VisibilityInfo OutVisibilityInfo;
+
 	NewTargetLocation = Cursor.GetCursorFeetLocation();
 
 	if( NewTargetLocation != CachedTargetLocation )
@@ -22,7 +24,7 @@ function Update(float DeltaTime)
 		{
 			BlockedTile = Raytrace.BlockedTile; 
 			//  check left and right peeks
-			FiringUnit.GetDirectionInfoForPosition(NewTargetLocation, Direction, PeekSide, CanSeeFromDefault, OutRequiresLean, true);
+			FiringUnit.GetDirectionInfoForPosition(NewTargetLocation, OutVisibilityInfo, Direction, PeekSide, CanSeeFromDefault, OutRequiresLean, true);
 
 			if (PeekSide != eNoPeek)
 			{
