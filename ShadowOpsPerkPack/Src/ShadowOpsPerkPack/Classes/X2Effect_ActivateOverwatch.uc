@@ -24,16 +24,20 @@ static private function TriggerAssociatedEvent(X2Effect_Persistent PersistentEff
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
 	local X2EventManager EventMgr;
+	local XComGameState_Unit SourceUnitState;
+	local XComGameStateHistory History;
 	local Object ListenerObj;
 
 	`Log(string(GetFuncName()));
 
+	History = `XCOMHISTORY;
 	EventMgr = `XEVENTMGR;
 
 	ListenerObj = EffectGameState;
+	SourceUnitState = XComGameState_Unit(History.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 
 	// Register for the required event
-	EventMgr.RegisterForEvent(ListenerObj, EventName, EventHandler, ELD_OnStateSubmitted,, UnitState,, EffectGameState);	
+	EventMgr.RegisterForEvent(ListenerObj, default.EventName, EventHandler, ELD_OnStateSubmitted,, SourceUnitState,, EffectGameState);	
 }
 
 static function EventListenerReturn EventHandler(Object EventData, Object EventSource, XComGameState GameState, Name EventID, Object CallbackData)
