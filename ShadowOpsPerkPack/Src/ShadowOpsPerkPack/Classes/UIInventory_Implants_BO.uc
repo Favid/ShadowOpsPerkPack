@@ -203,13 +203,13 @@ simulated function OnItemSelected(UIList ContainerList, int ItemIndex)
 
 		EquippedImplants = Unit.GetAllItemsInSlot(eInvSlot_CombatSim);
 		
-		if (IsContinentBonusActive())
+		if (XComHQ.bReusePCS)
 		{
 			// Skip the popups if the continent bonus for reusing upgrades is active
 			if (SlotIndex < EquippedImplants.Length)
-				ConfirmImplantRemovalCallback(eUIAction_Accept);
+				ConfirmImplantRemovalCallback('eUIAction_Accept');
 			else
-				ConfirmImplantInstallCallback(eUIAction_Accept);
+				ConfirmImplantInstallCallback('eUIAction_Accept');
 		}
 		else
 		{
@@ -241,12 +241,9 @@ simulated function RemoveImplant()
 
 	if(UpdatedUnit.RemoveItemFromInventory(EquippedImplants[SlotIndex], UpdatedState)) 
 	{
-		UpdatedState.AddStateObject(UpdatedUnit);
-
-		if (IsContinentBonusActive()) // Continent Bonus is letting us reuse upgrades, so put it back into the inventory
+		if (XComHQ.bReusePCS) // Breakthrough research is letting us reuse PCS, so put it back into the inventory
 		{
-			XComHQ = XComGameState_HeadquartersXCom(UpdatedState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			UpdatedState.AddStateObject(XComHQ);
+			XComHQ = XComGameState_HeadquartersXCom(UpdatedState.ModifyStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
 			XComHQ.PutItemInInventory(UpdatedState, EquippedImplants[SlotIndex]);
 		}
 		else
@@ -271,9 +268,8 @@ simulated function InstallImplant()
 	UpdatedState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Install Personal Combat Sim");
 
 	UnitRef = GetUnit().GetReference();
-	UpdatedHQ = XComGameState_HeadquartersXCom(UpdatedState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-	UpdatedUnit = XComGameState_Unit(UpdatedState.CreateStateObject(class'XComGameState_Unit', UnitRef.ObjectID));
-	UpdatedState.AddStateObject(UpdatedHQ);
+	UpdatedHQ = XComGameState_HeadquartersXCom(UpdatedState.ModifyStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+	UpdatedUnit = XComGameState_Unit(UpdatedState.ModifyStateObject(class'XComGameState_Unit', UnitRef.ObjectID));
 
 	UpdatedHQ.GetItemFromInventory(UpdatedState, Implants[List.SelectedIndex].GetReference(), UpdatedImplant);
 	
@@ -286,38 +282,3 @@ simulated function InstallImplant()
 	`GAMERULES.SubmitGameState(UpdatedState);
 }
 
-// Copied from LW2, hardcodes PCSRemovalContinentBonusOverride == 'ContinentBonus_Wired/ so that it doesn't depend on LW2
-function bool IsContinentBonusActive ()
-{
-	local array<X2StrategyElementTemplate> ContinentBonuses;
-	local X2StrategyElementTemplate StrategyElement;
-	local XComGameState_Continent Continent;
-	local bool bFoundWired;
-
-	ContinentBonuses = class'X2StrategyElementTemplateManager'.static.GetStrategyElementTemplateManager().GetAllTemplatesOfClass(class'X2GameplayMutatorTemplate');
-
-	foreach ContinentBonuses(StrategyElement)
-	{
-		if (StrategyElement.DataName == 'ContinentBonus_Wired')
-		{
-			bFoundWired = true;
-			break;
-		}
-	}
-	if (!bFoundWired)
-	{
-		return XComHQ.bReuseUpgrades;
-	}
-
-	foreach `XCOMHISTORY.IterateByClassType(class'XComGameState_Continent', Continent)
-    {
-        if(Continent.bContinentBonusActive)
-        {
-			if (Continent.ContinentBonus == 'ContinentBonus_Wired')
-			{
-				return true;
-			}
-		}
-	}
-	return false;
-}
