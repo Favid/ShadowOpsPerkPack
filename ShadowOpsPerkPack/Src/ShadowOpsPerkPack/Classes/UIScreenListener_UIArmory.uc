@@ -177,8 +177,8 @@ static function int GetMinimumForceLevel(X2CharacterTemplate Template)
 	{
 		foreach SpawnList.SpawnDistribution(SpawnEntry)
 		{
-			if (SpawnEntry.Template == Template && SpawnEntry.SpawnWeight > 0)
-				return SpawnWeight.MinForceLevel;
+			if (SpawnEntry.Template == Template.DataName && SpawnEntry.SpawnWeight > 0)
+				return SpawnEntry.MinForceLevel;
 		}
 	}
 
