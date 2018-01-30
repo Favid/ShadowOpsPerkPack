@@ -936,8 +936,6 @@ static function DisabledVisualization(XComGameState VisualizeGameState, out Visu
 {
 	local X2Action_UpdateFOW FOWUpdate;
 
-	super.AddX2ActionsForVisualization(VisualizeGameState, ActionMetadata, EffectApplyResult);
-
 	if( (EffectApplyResult == 'AA_Success') &&
 		(XComGameState_Unit(ActionMetadata.StateObject_NewState) != none) )
 	{
@@ -952,7 +950,7 @@ static function DisabledVisualization(XComGameState VisualizeGameState, out Visu
 	}
 }
 
-static function DisabledVisualizationTicked(XComGameState VisualizeGameState, out VisualizationActionMetadata BuildTrack, const int TickIndex, XComGameState_Effect EffectState)
+static function DisabledVisualizationTicked(XComGameState VisualizeGameState, out VisualizationActionMetadata BuildTrack, name EffectApplyResult)
 {
 	local XComGameState_Unit UnitState;
 
@@ -981,7 +979,7 @@ static function DisabledVisualizationTicked(XComGameState VisualizeGameState, ou
 	class'X2StatusEffects'.static.UpdateUnitFlag(BuildTrack, VisualizeGameState.GetContext());
 }
 
-static function DisabledVisualizationRemoved(XComGameState VisualizeGameState, out VisualizationActionMetadata BuildTrack, const name EffectApplyResult, XComGameState_Effect RemovedEffect)
+static function DisabledVisualizationRemoved(XComGameState VisualizeGameState, out VisualizationActionMetadata BuildTrack, const name EffectApplyResult)
 {
 	local XComGameState_Unit UnitState;
 
@@ -995,7 +993,7 @@ static function DisabledVisualizationRemoved(XComGameState VisualizeGameState, o
 		return;
 	}
 
-	class'X2StatusEffects'.static.AddEffectSoundAndFlyOverToTrack(BuildTrack, VisualizeGameState.GetContext(), EffectLostFriendlyName, '', eColor_Good, "img:///UILibrary_PerkIcons.UIPerk_disablingshot", 2.0f);
+	class'X2StatusEffects'.static.AddEffectSoundAndFlyOverToTrack(BuildTrack, VisualizeGameState.GetContext(), default.DisabledEffectLostString, '', eColor_Good, "img:///UILibrary_PerkIcons.UIPerk_disablingshot", 2.0f);
 	class'X2StatusEffects'.static.AddEffectMessageToTrack(BuildTrack,
 														  default.DisabledEffectLostString,
 														  VisualizeGameState.GetContext(),
