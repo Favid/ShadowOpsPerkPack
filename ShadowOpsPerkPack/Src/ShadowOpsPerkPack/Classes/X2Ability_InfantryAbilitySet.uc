@@ -278,7 +278,7 @@ static function X2AbilityTemplate FullAuto()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = FullAuto_BuildVisualization;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_FullAuto2');
@@ -1232,22 +1232,22 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
         BuildTrack = EmptyTrack;
         BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
         BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
-        BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
+        BuildTrack.VisualizeActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
 
         // Exit Cover
-        class'X2Action_ExitCover'.static.AddToVisualizationTrack(BuildTrack, Context);
+        class'X2Action_ExitCover'.static.AddToVisualizationTree(BuildTrack, Context);
 
         // Play the firing action (requires CustomFireAnim)
-        PlayAnimation = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(BuildTrack, Context));
+        PlayAnimation = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTree(BuildTrack, Context));
         PlayAnimation.Params.AnimName = AbilityTemplate.CustomFireAnim;
 
         // Air strike:
         // is a part of the shooter track, because who else would be the track actor?
         // this action will notify all the targets that the projectile hit
-        class'X2Action_Airstrike'.static.AddToVisualizationTrack(BuildTrack, Context);
+        class'X2Action_Airstrike'.static.AddToVisualizationTree(BuildTrack, Context);
 
         // enter cover
-        class'X2Action_EnterCover'.static.AddToVisualizationTrack(BuildTrack, Context);
+        class'X2Action_EnterCover'.static.AddToVisualizationTree(BuildTrack, Context);
 
 
         //****************************************************************************************
@@ -1261,16 +1261,16 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
                 BuildTrack = EmptyTrack;
                 BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
                 BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
-                BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
+                BuildTrack.VisualizeActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
 
-                class'X2Action_WaitForAbilityEffect'.static.AddToVisualizationTrack( BuildTrack, Context );
+                class'X2Action_WaitForAbilityEffect'.static.AddToVisualizationTree( BuildTrack, Context );
 
                 for( j = 0; j < Context.ResultContext.MultiTargetEffectResults[i].Effects.Length; ++j )
                 {
                         Context.ResultContext.MultiTargetEffectResults[i].Effects[j].AddX2ActionsForVisualization(VisualizeGameState, BuildTrack, Context.ResultContext.MultiTargetEffectResults[i].ApplyResults[j]);
                 }
 
-                TargetVisualizerInterface = X2VisualizerInterface(BuildTrack.TrackActor);
+                TargetVisualizerInterface = X2VisualizerInterface(BuildTrack.VisualizeActor);
                 if( TargetVisualizerInterface != none )
                 {
                         //Allow the visualizer to do any custom processing based on the new game state. For example, units will create a death action when they reach 0 HP.
@@ -1288,9 +1288,9 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
                 BuildTrack = EmptyTrack;
                 BuildTrack.StateObject_OldState = DamageEventStateObject;
                 BuildTrack.StateObject_NewState = DamageEventStateObject;
-                BuildTrack.TrackActor = class'XComGameStateHistory'.static.GetGameStateHistory().GetVisualizer(DamageEventStateObject.ObjectID);
-                class'X2Action_WaitForAbilityEffect'.static.AddToVisualizationTrack(BuildTrack, Context);
-                class'X2Action_ApplyWeaponDamageToTerrain'.static.AddToVisualizationTrack(BuildTrack, Context);
+                BuildTrack.VisualizeActor = class'XComGameStateHistory'.static.GetGameStateHistory().GetVisualizer(DamageEventStateObject.ObjectID);
+                class'X2Action_WaitForAbilityEffect'.static.AddToVisualizationTree(BuildTrack, Context);
+                class'X2Action_ApplyWeaponDamageToTerrain'.static.AddToVisualizationTree(BuildTrack, Context);
         }
         //****************************************************************************************
 
@@ -1528,13 +1528,13 @@ function ZoneOfControlOverwatchShotTaken_BuildVisualization(XComGameState Visual
 	//****************************************************************************************	
 	TargetVisualizer = History.GetVisualizer(AbilityContext.SourceObject.ObjectID);
 
-	BuildTrack.TrackActor = TargetVisualizer;
+	BuildTrack.VisualizeActor = TargetVisualizer;
 	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(AbilityContext.SourceObject.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
 	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(AbilityContext.SourceObject.ObjectID);
 
 	if (XComGameState_Unit(BuildTrack.StateObject_NewState).ReserveActionPoints.Length > 0)
 	{
-		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, Context));
+		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTree(BuildTrack, Context));
 		SoundAndFlyOver.SetSoundAndFlyOverParameters(none, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
 	}
 }
