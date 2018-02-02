@@ -6,8 +6,6 @@ var config int ConventionalShieldProtocol, MagneticShieldProtocol, BeamShieldPro
 var config int ConventionalShieldsUp, MagneticShieldsUp, BeamShieldsUp;
 var config float AegisDamageReduction;
 var config int HeavyArmorBase, HeavyArmorBonus;
-var config int FinesseMobilityBonus, FinesseOffenseBonus;
-var config name FinesseWeaponCat, FinesseDefaultWeapon;
 var config int BurstFireEnvironmentalDamage, BurstFireCoverDestructionChance, BurstFireHitChance;
 var config float ECMDetectionModifier;
 var config int TacticalSenseDodgeBonus, TacticalSenseMaxDodgeBonus;
@@ -44,7 +42,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(ShieldProtocol());
 	Templates.AddItem(HeavyArmor());
-	Templates.AddItem(Finesse());				// Non-LW only
 	Templates.AddItem(StealthProtocol());
 	Templates.AddItem(BurstFire());
 	Templates.AddItem(ShieldsUp());
@@ -236,127 +233,6 @@ static function bool HeavyArmorStatDisplay(XComGameState_Item InventoryItem)
 	
 	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
 	return (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon);
-}
-
-static function X2AbilityTemplate Finesse()
-{
-	local X2AbilityTemplate						BaseTemplate;
-	local X2AbilityTemplate_Dragoon					Template;
-	local X2AbilityTargetStyle                  TargetStyle;
-	local X2AbilityTrigger						Trigger;
-	local X2Effect_PersistentStatChange         FinesseEffect;
-	local X2Condition_UnitInventory				Condition;
-
-	`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_Finesse');
-	Template = new class'X2AbilityTemplate_Dragoon'(BaseTemplate);
-
-	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stickandmove";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
-	Template.AbilityTriggers.AddItem(Trigger);
-
-	FinesseEffect = new class'X2Effect_PersistentStatChange';
-	FinesseEffect.EffectName = 'Finesse';
-	FinesseEffect.BuildPersistentEffect(1, true, true, true);
-	FinesseEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage,,,Template.AbilitySourceName);
-	FinesseEffect.AddPersistentStatChange(eStat_Offense, default.FinesseOffenseBonus);
-	FinesseEffect.AddPersistentStatChange(eStat_Mobility, default.FinesseMobilityBonus);
-	Template.AddTargetEffect(FinesseEffect);
-
-	Condition = new class'X2Condition_UnitInventory';
-	Condition.RelevantSlot = eInvSlot_PrimaryWeapon;
-	Condition.RequireWeaponCategory = default.FinesseWeaponCat;
-	Template.AbilityTargetConditions.AddItem(Condition);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.SoldierAbilityPurchasedFn = FinessePurchased;
-
-	Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.AimLabel, eStat_Offense, default.FinesseOffenseBonus, FinesseStatDisplay);
-	Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.FinesseMobilityBonus, FinesseStatDisplay);
-
-	Template.bCrossClassEligible = false;
-
-	return Template;
-}
-
-static function bool FinesseStatDisplay(XComGameState_Item InventoryItem)
-{
-	local X2WeaponTemplate WeaponTemplate;
-	
-	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
-	return (WeaponTemplate != none && WeaponTemplate.WeaponCat == default.FinesseWeaponCat);
-}
-
-static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit UnitState)
-{
-	local XComGameState_Item RelevantItem, ItemState;
-	local X2WeaponTemplate WeaponTemplate, BestWeaponTemplate;
-	local XComGameStateHistory History;
-	local XComGameState_HeadquartersXCom XComHQ;
-	local int idx;
-
-	// Grab HQ Object
-	History = `XCOMHISTORY;
-	
-	foreach NewGameState.IterateByClassType(class'XComGameState_HeadquartersXCom', XComHQ)
-	{
-		break;
-	}
-
-	if(XComHQ == none)
-	{
-		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
-		XComHQ = XComGameState_HeadquartersXCom(NewGameState.ModifyStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-	}
-
-	RelevantItem = UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon);
-	if (RelevantItem != none)
-		WeaponTemplate = X2WeaponTemplate(RelevantItem.GetMyTemplate());
-
-	if (WeaponTemplate == none || WeaponTemplate.WeaponCat != default.FinesseWeaponCat)
-	{
-		if (RelevantItem != none)
-		{
-			UnitState.RemoveItemFromInventory(RelevantItem , NewGameState);
-			XComHQ.PutItemInInventory(NewGameState, RelevantItem);
-		}
-
-		BestWeaponTemplate = X2WeaponTemplate(class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate(default.FinesseDefaultWeapon));
-
-		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
-		{
-			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
-			WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
-
-			if (WeaponTemplate != none && (WeaponTemplate.bInfiniteItem || WeaponTemplate.StartingItem) && WeaponTemplate.WeaponCat == default.FinesseWeaponCat && (BestWeaponTemplate == none || (WeaponTemplate.Tier >= BestWeaponTemplate.Tier)))
-			{
-				BestWeaponTemplate = WeaponTemplate;
-			}
-		}
-
-		if (!UnitState.CanAddItemToInventory(BestWeaponTemplate, BestWeaponTemplate.InventorySlot, NewGameState))
-		{
-			`RedScreen("Unable to add assault rifle to inventory." @ BestWeaponTemplate.DataName);
-			return;
-		}
-
-		ItemState = BestWeaponTemplate.CreateInstanceFromTemplate(NewGameState);
-		ItemState.WeaponAppearance.iWeaponTint = UnitState.kAppearance.iWeaponTint;
-		ItemState.WeaponAppearance.nmWeaponPattern = UnitState.kAppearance.nmWeaponPattern;
-		UnitState.AddItemToInventory(ItemState, BestWeaponTemplate.InventorySlot, NewGameState);
-	}
 }
 
 static function X2AbilityTemplate ShotgunFinesse()

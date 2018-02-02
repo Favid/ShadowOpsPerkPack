@@ -16,51 +16,12 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 	
-	Templates.AddItem(HipFire());
 	Templates.AddItem(Scrounger());
 	Templates.AddItem(ScroungerTrigger());
-	Templates.AddItem(Weaponmaster());
-	Templates.AddItem(AbsolutelyCritical());
 	Templates.AddItem(SnakeBlood());
 	Templates.AddItem(Rage());
 
 	return Templates;
-}
-
-static function X2AbilityTemplate HipFire()
-{
-	local X2AbilityTemplate                 Template;
-	local X2AbilityCooldown					Cooldown;
-	local X2AbilityToHitCalc_StandardAim	ToHitCalc;
-	local X2AbilityCost						Cost;
-	local X2AbilityCost_ActionPoints		ActionPointCost;
-
-	Template = class'X2Ability_WeaponCommon'.static.Add_StandardShot('ShadowOps_HipFire');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
-
-	foreach Template.AbilityCosts(Cost)
-	{
-		ActionPointCost = X2AbilityCost_ActionPoints(Cost);
-		if (ActionPointCost != none)
-		{
-			ActionPointCost.bFreeCost = true;
-			ActionPointCost.bConsumeAllPoints = false;
-		}
-	}
-
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.HipFireCooldown;
-	Template.AbilityCooldown = Cooldown;
-
-	// Hit Calculation (Different weapons now have different calculations for range)
-	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
-	ToHitCalc.BuiltInHitMod = default.HipFireHitModifier;
-	Template.AbilityToHitCalc = ToHitCalc;
-	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
 }
 
 static function X2AbilityTemplate Scrounger()
@@ -103,28 +64,6 @@ static function X2AbilityTemplate ScroungerTrigger()
 	Template.bCrossClassEligible = true;
 
 	return Template;
-}
-
-static function X2AbilityTemplate Weaponmaster()
-{
-	local XMBEffect_ConditionalBonus              Effect;
-
-	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AddDamageModifier(default.WeaponmasterBonusDamage);
-	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
-
-	return Passive('ShadowOps_Weaponmaster', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-}
-
-static function X2AbilityTemplate AbsolutelyCritical()
-{
-	local XMBEffect_ConditionalBonus             Effect;
-
-	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AbilityTargetConditions.AddItem(default.NoCoverCondition);
-	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
-
-	return Passive('ShadowOps_AbsolutelyCritical', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate SnakeBlood()

@@ -57,8 +57,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Pyromaniac());
 	Templates.AddItem(HitAndRun());
 	Templates.AddItem(FocusedDefense());
-	Templates.AddItem(LineEmUp());				// Unused
-	Templates.AddItem(ControlledDetonation());	// Unused
+	Templates.AddItem(LineEmUp());
+	Templates.AddItem(ControlledDetonation());
 	Templates.AddItem(Mayhem());
 	Templates.AddItem(Mayhem_LW2());
 	Templates.AddItem(Saboteur());
