@@ -168,9 +168,9 @@ simulated static function XComGameState HotLoadAmmo_BuildGameState(XComGameState
 	AbilityContext = XComGameStateContext_Ability(Context);
 	AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(AbilityContext.InputContext.AbilityRef.ObjectID));
 
-	UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', AbilityContext.InputContext.SourceObject.ObjectID));
+	UnitState = XComGameState_Unit(NewGameState.ModifyStateObject(class'XComGameState_Unit', AbilityContext.InputContext.SourceObject.ObjectID));
 	WeaponState = AbilityState.GetSourceWeapon();
-	NewWeaponState = XComGameState_Item(NewGameState.CreateStateObject(class'XComGameState_Item', WeaponState.ObjectID));
+	NewWeaponState = XComGameState_Item(NewGameState.ModifyStateObject(class'XComGameState_Item', WeaponState.ObjectID));
 	WeaponTemplate = X2WeaponTemplate(WeaponState.GetMyTemplate());
 
 	UtilityItems = UnitState.GetAllItemsInSlot(eInvSlot_AmmoPocket);
@@ -202,9 +202,6 @@ simulated static function XComGameState HotLoadAmmo_BuildGameState(XComGameState
 		NewWeaponState.LoadedAmmo = AmmoState.GetReference();
 		NewWeaponState.Ammo += AmmoState.GetClipSize();
 	}
-
-	NewGameState.AddStateObject(UnitState);
-	NewGameState.AddStateObject(NewWeaponState);
 
 	return NewGameState;
 }

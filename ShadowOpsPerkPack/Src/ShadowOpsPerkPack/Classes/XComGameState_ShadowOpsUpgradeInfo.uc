@@ -73,20 +73,17 @@ function GrantFreeRespecs(XComGameState NewGameState)
 		
 		if (bAllowRespec)
 		{
-			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
+			UnitState = XComGameState_Unit(NewGameState.ModifyStateObject(class'XComGameState_Unit', UnitState.ObjectID));
 			UnitInfo = XComGameState_ShadowOpsUnitInfo(UnitState.FindComponentObject(class'XComGameState_ShadowOpsUnitInfo'));
 
 			if (UnitInfo == none)
 			{
-				UnitInfo = XComGameState_ShadowOpsUnitInfo(NewGameState.CreateStateObject(class'XComGameState_ShadowOpsUnitInfo'));
+				UnitInfo = XComGameState_ShadowOpsUnitInfo(NewGameState.CreateNewStateObject(class'XComGameState_ShadowOpsUnitInfo'));
 				UnitState.AddComponentObject(UnitInfo);
 			}
 
 			UnitInfo.bFreeRespecAllowed = true;
 			UnitInfo.iFreeRespecMaxRank = UnitState.GetSoldierRank();
-
-			NewGameState.AddStateObject(UnitState);
-			NewGameState.AddStateObject(UnitInfo);
 
 			`Log("Set free respec on unit id" @ UnitState.ObjectId); 
 		}

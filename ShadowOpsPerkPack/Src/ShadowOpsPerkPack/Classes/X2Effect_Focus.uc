@@ -73,9 +73,8 @@ function static EventListenerReturn FocusListener(Object EventData, Object Event
 
 		SourceUnit.GetUnitValue(default.FocusValueName, CountUnitValue);
 
-		SourceUnit = XComGameState_Unit(NewGameState.CreateStateObject(SourceUnit.Class, SourceUnit.ObjectID));
+		SourceUnit = XComGameState_Unit(NewGameState.ModifyStateObject(SourceUnit.Class, SourceUnit.ObjectID));
 		SourceUnit.SetUnitFloatValue(default.FocusValueName, CountUnitValue.fValue + 1, eCleanup_BeginTurn);
-		NewGameState.AddStateObject(SourceUnit);
 
 		`TACTICALRULES.SubmitGameState(NewGameState);
 	}

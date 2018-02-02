@@ -43,8 +43,7 @@ static function CreateInitialUpgradeInfo(XComGameState StartState)
 {
 	local XComGameState_ShadowOpsUpgradeInfo UpgradeInfo;
 
-	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(StartState.CreateStateObject(class'XComGameState_ShadowOpsUpgradeInfo'));
-	StartState.AddStateObject(UpgradeInfo);
+	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(StartState.CreateNewStateObject(class'XComGameState_ShadowOpsUpgradeInfo'));
 
 	UpgradeInfo.InitializeForNewGame();
 }

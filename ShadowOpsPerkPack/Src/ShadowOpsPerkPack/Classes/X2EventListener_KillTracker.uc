@@ -36,7 +36,6 @@ static function EventListenerReturn OnKillMail(Object EventData, Object EventSou
 
 	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Shadow Ops: Update Kill Tracker");
 	Tracker = XComGameState_KillTracker(NewGameState.ModifyStateObject(class'XComGameState_KillTracker', tracker.ObjectID));
-	NewGameState.AddStateObject(Tracker);
 	Tracker.UpdateKills(UnitState);
 	`GAMERULES.SubmitGameState(NewGameState);
 

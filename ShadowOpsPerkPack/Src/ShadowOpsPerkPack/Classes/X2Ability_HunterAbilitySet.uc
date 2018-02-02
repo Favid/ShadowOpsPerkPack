@@ -329,12 +329,11 @@ static function Fade_EffectAdded(X2Effect_Persistent PersistentEffect, const out
 	local XComGameState_Unit UnitState;
 	local XComGameState_Effect EffectGameState;
 
-	UnitState = XComGameState_Unit( NewGameState.CreateStateObject( class'XComGameState_Unit', ApplyEffectParameters.TargetStateObjectRef.ObjectID ) );
+	UnitState = XComGameState_Unit( NewGameState.ModifyStateObject( class'XComGameState_Unit', ApplyEffectParameters.TargetStateObjectRef.ObjectID ) );
 	EffectGameState = UnitState.GetUnitAffectedByEffectState(PersistentEffect.EffectName);
 
 	EventMgr = `XEVENTMGR;
 	EffectObj = EffectGameState;
-	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
 	EventMgr.RegisterForEvent(EffectObj, 'ObjectMoved', EffectGameState.GenerateCover_ObjectMoved, ELD_OnStateSubmitted, , UnitState);
 }
 

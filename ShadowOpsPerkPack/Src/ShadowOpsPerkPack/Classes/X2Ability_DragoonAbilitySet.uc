@@ -318,8 +318,7 @@ static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit 
 	if(XComHQ == none)
 	{
 		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
-		XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-		NewGameState.AddStateObject(XComHQ);
+		XComHQ = XComGameState_HeadquartersXCom(NewGameState.ModifyStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
 	}
 
 	RelevantItem = UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon);
@@ -357,7 +356,6 @@ static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit 
 		ItemState.WeaponAppearance.iWeaponTint = UnitState.kAppearance.iWeaponTint;
 		ItemState.WeaponAppearance.nmWeaponPattern = UnitState.kAppearance.nmWeaponPattern;
 		UnitState.AddItemToInventory(ItemState, BestWeaponTemplate.InventorySlot, NewGameState);
-		NewGameState.AddStateObject(ItemState);
 	}
 }
 

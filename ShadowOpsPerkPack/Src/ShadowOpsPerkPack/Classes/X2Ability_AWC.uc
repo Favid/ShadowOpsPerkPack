@@ -251,7 +251,7 @@ function Rage_EffectAdded(X2Effect_Persistent PersistentEffect, const out Effect
 
 	// Add AI data with the alert
 
-	NewAIUnitData = XComGameState_AIUnitData(NewGameState.CreateStateObject(class'XComGameState_AIUnitData', NewUnitState.GetAIUnitDataID()));
+	NewAIUnitData = XComGameState_AIUnitData(NewGameState.ModifyStateObject(class'XComGameState_AIUnitData', NewUnitState.GetAIUnitDataID()));
 	if( NewAIUnitData.m_iUnitObjectID != NewUnitState.ObjectID )
 	{
 		NewAIUnitData.Init(NewUnitState.ObjectID);
@@ -262,11 +262,7 @@ function Rage_EffectAdded(X2Effect_Persistent PersistentEffect, const out Effect
 		bDataChanged = true;
 	}
 
-	if( bDataChanged )
-	{
-		NewGameState.AddStateObject(NewAIUnitData);
-	}
-	else
+	if( !bDataChanged )
 	{
 		NewGameState.PurgeGameStateForObjectID(NewAIUnitData.ObjectID);
 	}

@@ -84,9 +84,8 @@ function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out
 	}	
 
 	// Perform the heal
-	NewTargetState = XComGameState_Unit(NewGameState.CreateStateObject(OldTargetState.Class, OldTargetState.ObjectID));
+	NewTargetState = XComGameState_Unit(NewGameState.ModifyStateObject(OldTargetState.Class, OldTargetState.ObjectID));
 	NewTargetState.ModifyCurrentStat(estat_HP, AmountToHeal);
-	NewGameState.AddStateObject(NewTargetState);
 
 	if (EventToTriggerOnHeal != '')
 	{

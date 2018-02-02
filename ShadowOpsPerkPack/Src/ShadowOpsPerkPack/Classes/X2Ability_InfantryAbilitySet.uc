@@ -96,7 +96,6 @@ static function BandolierPurchased(XComGameState NewGameState, XComGameState_Uni
 		return;
 	}
 	ItemState = FreeItem.CreateInstanceFromTemplate(NewGameState);
-	NewGameState.AddStateObject(ItemState);
 	if (!UnitState.AddItemToInventory(ItemState, eInvSlot_AmmoPocket, NewGameState))
 	{
 		`RedScreen("Unable to add free ammo to unit's inventory. Sadness." @ UnitState.ToString());
@@ -168,7 +167,7 @@ simulated function XComGameState SwapAmmo_BuildGameState( XComGameStateContext C
 
 	AmmoState = AbilityState.GetSourceWeapon();
 
-	UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', AbilityContext.InputContext.SourceObject.ObjectID));	
+	UnitState = XComGameState_Unit(NewGameState.ModifyStateObject(class'XComGameState_Unit', AbilityContext.InputContext.SourceObject.ObjectID));	
 	InventoryItems = UnitState.GetAllInventoryItems(NewGameState);
 
 	foreach InventoryItems(WeaponState)
@@ -177,18 +176,14 @@ simulated function XComGameState SwapAmmo_BuildGameState( XComGameStateContext C
 		if (LoadedAmmoState == none || !LoadedAmmoState.GetMyTemplate().IsA('X2AmmoTemplate'))
 			continue;
 
-		NewWeaponState = XComGameState_Item(NewGameState.CreateStateObject(class'XComGameState_Item', WeaponState.ObjectID));
+		NewWeaponState = XComGameState_Item(NewGameState.ModifyStateObject(class'XComGameState_Item', WeaponState.ObjectID));
 		//  apply new ammo
 		NewWeaponState.LoadedAmmo = AmmoState.GetReference();
 		//  refill the weapon's ammo	
 		NewWeaponState.Ammo = NewWeaponState.GetClipSize();
-
-		NewGameState.AddStateObject(NewWeaponState);
 	}
 
 	AbilityState.GetMyTemplate().ApplyCost(AbilityContext, AbilityState, UnitState, NewWeaponState, NewGameState);	
-
-	NewGameState.AddStateObject(UnitState);
 
 	return NewGameState;	
 }
@@ -1494,8 +1489,7 @@ simulated function XComGameState ZoneOfControlOverwatchShotTaken_BuildGameState(
 	NewGameState = History.CreateNewGameState(true, Context);
 
 	AbilityContext = XComGameStateContext_Ability(Context);
-	SourceUnit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', AbilityContext.InputContext.SourceObject.ObjectID));
-	NewGameState.AddStateObject(SourceUnit);
+	SourceUnit = XComGameState_Unit(NewGameState.ModifyStateObject(class'XComGameState_Unit', AbilityContext.InputContext.SourceObject.ObjectID));
 
 	ValueName = name("OverwatchShot" $ AbilityContext.InputContext.PrimaryTarget.ObjectID);
 	SourceUnit.SetUnitFloatValue (ValueName, 1.0, eCleanup_BeginTurn);

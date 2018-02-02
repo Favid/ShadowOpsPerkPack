@@ -56,12 +56,11 @@ function static EventListenerReturn ZeroInListener(Object EventData, Object Even
 		if (AbilityContext != none)
 		{
 			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState(string(GetFuncName()));
-			NewEffectState = XComGameState_Effect(NewGameState.CreateStateObject(class'XComGameState_Effect', EffectState.ObjectID));
+			NewEffectState = XComGameState_Effect(NewGameState.ModifyStateObject(class'XComGameState_Effect', EffectState.ObjectID));
 			if (class'XComGameStateContext_Ability'.static.IsHitResultHit(AbilityContext.ResultContext.HitResult))
 				NewEffectState.iStacks = 0;
 			else
 				NewEffectState.iStacks = 1;
-			NewGameState.AddStateObject(NewEffectState);
 			`GAMERULES.SubmitGameState(NewGameState);
 		}
 	}

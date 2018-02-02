@@ -5,7 +5,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	local XComGameState_Ability AbilityState;
 	local XComGameStateContext_Ability ActivatedAbilityStateContext;
 	local XComGameState_Item WeaponState, AmmoState;
-	local XComGameState_AIUnitData NewAIUnitDataState, AIUnitDataState;
+	local XComGameState_AIUnitData AIUnitDataState;
 	local XComGameState_Unit UnitState;
 	local XComGameStateHistory History;
 	local AlertAbilityInfo AlertInfo;
@@ -36,19 +36,13 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	if (UnitState == none)
 		return;
 
-	AIUnitDataState = XComGameState_AIUnitData(NewGameState.CreateStateObject(class'XComGameState_AIUnitData', UnitState.GetAIUnitDataID()));
-
 	if( UnitState != None && UnitState.IsAlive() )
 	{
-		NewAIUnitDataState = XComGameState_AIUnitData(NewGameState.CreateStateObject(AIUnitDataState.Class, AIUnitDataState.ObjectID));
+		AIUnitDataState = XComGameState_AIUnitData(NewGameState.ModifyStateObject(class'XComGameState_AIUnitData', UnitState.GetAIUnitDataID()));
 
-		if( NewAIUnitDataState.AddAlertData(NewAIUnitDataState.m_iUnitObjectID, eAC_MapwideAlert_Peaceful, AlertInfo, NewGameState) )
+		if( !AIUnitDataState.AddAlertData(AIUnitDataState.m_iUnitObjectID, eAC_MapwideAlert_Peaceful, AlertInfo, NewGameState) )
 		{
-			NewGameState.AddStateObject(NewAIUnitDataState);
-		}
-		else
-		{
-			NewGameState.PurgeGameStateForObjectID(NewAIUnitDataState.ObjectID);
+			NewGameState.PurgeGameStateForObjectID(AIUnitDataState.ObjectID);
 		}
 	}
 }

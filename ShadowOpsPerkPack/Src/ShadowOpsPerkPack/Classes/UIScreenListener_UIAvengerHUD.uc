@@ -46,7 +46,6 @@ function CreateStartingItems()
 		if (ItemTemplate != none && ItemTemplate.StartingItem && !XComHQ.HasItem(ItemTemplate))
 		{
 			NewItemState = ItemTemplate.CreateInstanceFromTemplate(NewGameState);
-			NewGameState.AddStateObject(NewItemState);
 			XComHQ.AddItemToHQInventory(NewItemState);
 			bChanged = true;
 		}

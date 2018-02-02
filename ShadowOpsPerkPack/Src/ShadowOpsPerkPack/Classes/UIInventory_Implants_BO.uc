@@ -235,7 +235,7 @@ simulated function RemoveImplant()
 	UpdatedState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Remove Personal Combat Sim");
 
 	UnitRef = GetUnit().GetReference();
-	UpdatedUnit = XComGameState_Unit(UpdatedState.CreateStateObject(class'XComGameState_Unit', UnitRef.ObjectID));
+	UpdatedUnit = XComGameState_Unit(UpdatedState.ModifyStateObject(class'XComGameState_Unit', UnitRef.ObjectID));
 	EquippedImplants = UpdatedUnit.GetAllItemsInSlot(eInvSlot_CombatSim);
 	SlotIndex = GetSlotIndex();
 
@@ -274,7 +274,6 @@ simulated function InstallImplant()
 	UpdatedHQ.GetItemFromInventory(UpdatedState, Implants[List.SelectedIndex].GetReference(), UpdatedImplant);
 	
 	UpdatedUnit.AddItemToInventory(UpdatedImplant, eInvSlot_CombatSim, UpdatedState);
-	UpdatedState.AddStateObject(UpdatedUnit);
 	
 	`XEVENTMGR.TriggerEvent('PCSApplied', UpdatedUnit, UpdatedImplant, UpdatedState);
 	`XSTRATEGYSOUNDMGR.PlaySoundEvent("Strategy_UI_PCS_Equip");

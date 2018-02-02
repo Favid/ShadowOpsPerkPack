@@ -37,9 +37,8 @@ static function UpdateGremlinConcealment(XComGameState_Unit SourceUnit, XComGame
 
 	foreach AttachedUnits(AttachedUnit)
 	{
-		NewAttachedUnit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', AttachedUnit.ObjectID));
+		NewAttachedUnit = XComGameState_Unit(NewGameState.ModifyStateObject(class'XComGameState_Unit', AttachedUnit.ObjectID));
 		NewAttachedUnit.SetIndividualConcealment(bConcealed, NewGameState);
-		NewGameState.AddStateObject(NewAttachedUnit);
 	}
 }
 

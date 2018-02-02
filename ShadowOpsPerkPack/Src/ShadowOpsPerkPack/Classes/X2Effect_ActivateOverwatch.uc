@@ -80,7 +80,7 @@ static function EventListenerReturn EventHandler(Object EventData, Object EventS
 		// Found an overwatch ability. First, make a couple of changes before we activate the ability.
 
 		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState(string(GetFuncName()));
-		UnitState = XComGameState_Unit(NewGameState.CreateStateObject(UnitState.Class, UnitState.ObjectID));
+		UnitState = XComGameState_Unit(NewGameState.ModifyStateObject(UnitState.Class, UnitState.ObjectID));
 
 		while (UnitState.NumActionPoints() < 2)
 		{
@@ -90,7 +90,6 @@ static function EventListenerReturn EventHandler(Object EventData, Object EventS
 		if (EffectTemplate.UnitValueName != '')
 			UnitState.SetUnitFloatValue(EffectTemplate.UnitValueName, 1, eCleanup_BeginTurn);
 
-		NewGameState.AddStateObject(UnitState);
 		`TACTICALRULES.SubmitGameState(NewGameState);
 
 		// Now activate the overwatch ability.
