@@ -1,17 +1,24 @@
-class UIScreenListener_TacticalHUD extends UIScreenListener;
+class X2EventListener_GremlinStealthFix extends X2EventListener;
 
-event OnInit(UIScreen Screen)
+static function array<X2DataTemplate> CreateTemplates()
 {
-	local X2EventManager EventMgr;
-	local Object ListenerObj;
+	local array<X2DataTemplate> Templates;
 
-	EventMgr = `XEVENTMGR;
+	Templates.AddItem( AddListeners() );
 
-	ListenerObj = self;
+	return Templates;
+}
 
-	EventMgr.RegisterForEvent(ListenerObj, 'SquadConcealmentBroken', UpdateGremlinConcealment_Player, ELD_OnStateSubmitted);
-	EventMgr.RegisterForEvent(ListenerObj, 'UnitConcealmentEntered', UpdateGremlinConcealment_Unit, ELD_PreStateSubmitted);
-	EventMgr.RegisterForEvent(ListenerObj, 'UnitConcealmentBroken', UpdateGremlinConcealment_Unit, ELD_PreStateSubmitted);
+static protected function X2EventListenerTemplate AddListeners()
+{
+	local X2EventListenerTemplate Template;
+
+	`CREATE_X2TEMPLATE(class'X2EventListenerTemplate', Template, 'GremlinStealthFixListener');
+	Template.AddEvent('SquadConcealmentBroken', UpdateGremlinConcealment_Player);
+	Template.AddEvent('UnitConcealmentEntered', UpdateGremlinConcealment_Unit);
+	Template.AddEvent('UnitConcealmentBroken', UpdateGremlinConcealment_Unit);
+
+	return Template;
 }
 
 static function UpdateGremlinConcealment(XComGameState_Unit SourceUnit, XComGameState NewGameState, Name EventID)
@@ -107,10 +114,4 @@ static function EventListenerReturn UpdateGremlinConcealment_Player(Object Event
 	}
 
 	return ELR_NoInterrupt;
-}
-
-
-defaultproperties
-{
-	ScreenClass = "UITacticalHUD";
 }
