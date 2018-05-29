@@ -698,9 +698,9 @@ static function X2AbilityTemplate ZoneOfControlPistolShot_LW()
 
 static function X2AbilityTemplate ZeroIn()
 {
-	local X2Effect_ZeroIn               ZeroInEffect;
+	local X2Effect_ZeroIn_SO               ZeroInEffect;
 
-	ZeroInEffect = new class'X2Effect_ZeroIn';
+	ZeroInEffect = new class'X2Effect_ZeroIn_SO';
 	ZeroInEffect.AccuracyBonus = default.ZeroInOffenseBonus;
 
 	return Passive('ShadowOps_ZeroIn', "img:///UILibrary_SOInfantry.UIPerk_goodeye", true, ZeroInEffect);

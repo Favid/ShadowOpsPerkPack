@@ -1,4 +1,4 @@
-class X2Effect_ZeroIn extends X2Effect_Persistent implements(XMBEffectInterface);
+class X2Effect_ZeroIn_SO extends X2Effect_Persistent implements(XMBEffectInterface);
 
 var int AccuracyBonus;
 var name ZeroInUnitValueName;

@@ -3,3 +3,4 @@ GremlinStealthFix/Classes/UIScreenListener_TacticalHUD
 
 General
 	Add localization files
+    Everything AI related
