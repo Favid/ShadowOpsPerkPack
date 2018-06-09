@@ -183,16 +183,18 @@ static function X2Effect ShieldSurgeEffect()
 	return ArmorEffect;
 }
 
+// TODO X2AbilityTemplate_Dragoon isn't working properly, using X2AbilityTemplate instead
+//      This means that stat changes from this ability won't show in the armory,
+//      but the ability will otherwise function properly
+// New implementation
 static function X2AbilityTemplate HeavyArmor()
 {
-	local X2AbilityTemplate						BaseTemplate;
-	local X2AbilityTemplate_Dragoon					Template;
+	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_HeavyArmor                   HeavyArmorEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_HeavyArmor');
-	Template = new class'X2AbilityTemplate_Dragoon'(BaseTemplate);
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HeavyArmor');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_heavyarmor";
@@ -219,26 +221,71 @@ static function X2AbilityTemplate HeavyArmor()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
 
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_ArmorMitigation, default.HeavyArmorBase);
-	Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_ArmorMitigation, default.HeavyArmorBonus, HeavyArmorStatDisplay);
-
 	Template.bCrossClassEligible = true;
 
 	return Template;
 }
 
-static function bool HeavyArmorStatDisplay(XComGameState_Item InventoryItem)
-{
-	local X2ArmorTemplate ArmorTemplate;
-	
-	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
-	return (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon);
-}
+// Original implementation
+//static function X2AbilityTemplate HeavyArmor()
+//{
+	//local X2AbilityTemplate						BaseTemplate;
+	//local X2AbilityTemplate_Dragoon					Template;
+	//local X2AbilityTargetStyle                  TargetStyle;
+	//local X2AbilityTrigger						Trigger;
+	//local X2Effect_HeavyArmor                   HeavyArmorEffect;
+//
+	//`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_HeavyArmor');
+	//Template = new class'X2AbilityTemplate_Dragoon'(BaseTemplate);
+//
+	//// Icon Properties
+	//Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_heavyarmor";
+//
+	//Template.AbilitySourceName = 'eAbilitySource_Perk';
+	//Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	//Template.Hostility = eHostility_Neutral;
+//
+	//Template.AbilityToHitCalc = default.DeadEye;
+//
+	//TargetStyle = new class'X2AbilityTarget_Self';
+	//Template.AbilityTargetStyle = TargetStyle;
+//
+	//Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	//Template.AbilityTriggers.AddItem(Trigger);
+//
+	//HeavyArmorEffect = new class'X2Effect_HeavyArmor';
+	//HeavyArmorEffect.Base = default.HeavyArmorBase;
+	//HeavyArmorEffect.Bonus = default.HeavyArmorBonus;
+	//HeavyArmorEffect.BuildPersistentEffect(1, true, true, true);
+	//HeavyArmorEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage,,,Template.AbilitySourceName);
+	//Template.AddTargetEffect(HeavyArmorEffect);
+//
+	//Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	////  NOTE: No visualization on purpose!
+//
+	//Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_ArmorMitigation, default.HeavyArmorBase);
+	//Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_ArmorMitigation, default.HeavyArmorBonus, HeavyArmorStatDisplay);
+//
+	//Template.bCrossClassEligible = true;
+//
+	//return Template;
+//}
+//
+//static function bool HeavyArmorStatDisplay(XComGameState_Item InventoryItem)
+//{
+	//local X2ArmorTemplate ArmorTemplate;
+	//
+	//ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
+	//return (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon);
+//}
 
+// TODO X2AbilityTemplate_Dragoon isn't working properly, using X2AbilityTemplate instead
+//      This means that stat changes from this ability won't show in the armory,
+//      but the ability will otherwise function properly
+// New implementation
 static function X2AbilityTemplate ShotgunFinesse()
 {
-	local X2AbilityTemplate						BaseTemplate;
-	local X2AbilityTemplate_Dragoon				Template;
+	local X2AbilityTemplate						Template;
 	local X2Effect_PersistentStatChange         FinesseEffect;
 	local X2Condition_UnitInventory				Condition;
 
@@ -246,19 +293,41 @@ static function X2AbilityTemplate ShotgunFinesse()
 	FinesseEffect.AddPersistentStatChange(eStat_CritChance, default.ShotgunFinesseCritBonus);
 	FinesseEffect.AddPersistentStatChange(eStat_Mobility, default.ShotgunFinesseMobilityBonus);
 
-	BaseTemplate = Passive('ShadowOps_ShotgunFinesse', "img:///UILibrary_PerkIcons.UIPerk_stickandmove", false, FinesseEffect);
-	Template = new class'X2AbilityTemplate_Dragoon'(BaseTemplate);
+	Template = Passive('ShadowOps_ShotgunFinesse', "img:///UILibrary_PerkIcons.UIPerk_stickandmove", false, FinesseEffect);
 
 	Condition = new class'X2Condition_UnitInventory';
 	Condition.RelevantSlot = eInvSlot_PrimaryWeapon;
 	Condition.RequireWeaponCategory = default.ShotgunFinesseWeaponCat;
 	Template.AbilityTargetConditions.AddItem(Condition);
 
-	Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.CharCritChance, eStat_CritChance, default.ShotgunFinesseCritBonus, ShotgunFinesseStatDisplay);
-	Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.ShotgunFinesseMobilityBonus, ShotgunFinesseStatDisplay);
-
 	return Template;
 }
+
+// Original implementation
+//static function X2AbilityTemplate ShotgunFinesse()
+//{
+	//local X2AbilityTemplate						BaseTemplate;
+	//local X2AbilityTemplate_Dragoon				Template;
+	//local X2Effect_PersistentStatChange         FinesseEffect;
+	//local X2Condition_UnitInventory				Condition;
+//
+	//FinesseEffect = new class'X2Effect_PersistentStatChange';
+	//FinesseEffect.AddPersistentStatChange(eStat_CritChance, default.ShotgunFinesseCritBonus);
+	//FinesseEffect.AddPersistentStatChange(eStat_Mobility, default.ShotgunFinesseMobilityBonus);
+//
+	//BaseTemplate = Passive('ShadowOps_ShotgunFinesse', "img:///UILibrary_PerkIcons.UIPerk_stickandmove", false, FinesseEffect);
+	//Template = new class'X2AbilityTemplate_Dragoon'(BaseTemplate);
+//
+	//Condition = new class'X2Condition_UnitInventory';
+	//Condition.RelevantSlot = eInvSlot_PrimaryWeapon;
+	//Condition.RequireWeaponCategory = default.ShotgunFinesseWeaponCat;
+	//Template.AbilityTargetConditions.AddItem(Condition);
+//
+	//Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.CharCritChance, eStat_CritChance, default.ShotgunFinesseCritBonus, ShotgunFinesseStatDisplay);
+	//Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.ShotgunFinesseMobilityBonus, ShotgunFinesseStatDisplay);
+//
+	//return Template;
+//}
 
 static function bool ShotgunFinesseStatDisplay(XComGameState_Item InventoryItem)
 {
