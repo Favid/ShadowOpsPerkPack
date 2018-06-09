@@ -933,8 +933,6 @@ static function X2Effect_Persistent CreateDisabledStatusEffect()
 
 static function DisabledVisualization(XComGameState VisualizeGameState, out VisualizationActionMetadata ActionMetadata, name EffectApplyResult)
 {
-	local X2Action_UpdateFOW FOWUpdate;
-
 	if( (EffectApplyResult == 'AA_Success') &&
 		(XComGameState_Unit(ActionMetadata.StateObject_NewState) != none) )
 	{
@@ -1163,7 +1161,7 @@ static function X2AbilityTemplate Fearsome()
 
 static function X2AbilityTemplate CoverMe()
 {
-	local X2AbilityTemplate Template, CoolUnderPressureTemplate;
+	local X2AbilityTemplate Template;
 	local XMBEffect_AddAbility CoolUnderPressureEffect;
 	local X2Effect_GrantReserveActionPoint ActionPointEffect;
 

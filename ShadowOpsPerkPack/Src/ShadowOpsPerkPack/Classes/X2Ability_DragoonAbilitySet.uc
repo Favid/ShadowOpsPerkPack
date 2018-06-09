@@ -622,7 +622,6 @@ static function X2AbilityTemplate RestorationProtocol()
 static function X2AbilityTemplate StasisField()
 {
 	local X2AbilityTemplate                     Template;
-	local X2AbilityCooldown                     Cooldown;
 	local X2Effect_Stasis						StasisEffect;
 	local X2AbilityMultiTarget_Radius			RadiusMultiTarget;
 

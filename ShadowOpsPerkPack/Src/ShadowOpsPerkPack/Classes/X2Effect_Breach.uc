@@ -13,10 +13,7 @@ function WeaponDamageValue GetBonusEffectDamageValue(XComGameState_Ability Abili
 {
 	local WeaponDamageValue DamageValue;
 	local X2WeaponTemplate WeaponTemplate;
-	local XComGameStateHistory History;
 	local int index;
-
-	History = `XCOMHISTORY;
 
 	if ((SourceWeapon != none) &&
 		(SourceUnit != none))
