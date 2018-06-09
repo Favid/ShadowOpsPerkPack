@@ -34,10 +34,15 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(GoodEye());
 	Templates.AddItem(FullAuto());
 	Templates.AddItem(FullAuto2());
-	Templates.AddItem(ZoneOfControl());
-	Templates.AddItem(ZoneOfControlShot());
-	Templates.AddItem(ZoneOfControlPistolShot());
-	Templates.AddItem(ZoneOfControlPistolShot_LW());
+
+    // TODO Legacy Zone of Control abilities
+    // Relies on X2AbilityTemplate_BO, which is not working correctly
+    // None of the classes use this ability, so commenting it out until a fix is found
+	//Templates.AddItem(ZoneOfControl());
+	//Templates.AddItem(ZoneOfControlShot());
+	//Templates.AddItem(ZoneOfControlPistolShot());
+	//Templates.AddItem(ZoneOfControlPistolShot_LW());
+
 	Templates.AddItem(ZoneOfControl_LW2());
 	Templates.AddItem(ZeroIn());
 	Templates.AddItem(RifleSuppression());			// Non-LW only
