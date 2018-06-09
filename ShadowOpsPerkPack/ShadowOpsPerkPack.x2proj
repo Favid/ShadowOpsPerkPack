@@ -61,6 +61,9 @@
     <Content Include="Content\UILibrary_SOInfantry.upk">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Localization\ShadowOpsPerkPack.int">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Localization\XComGame.int">
       <SubType>Content</SubType>
     </Content>
@@ -208,25 +211,7 @@
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2Condition_Untouchable.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2DownloadableContentInfo_BlackOps.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2DownloadableContentInfo_ShadowOpsPerkPack.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2DownloadableContentInfo_SOCombatEngineer.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2DownloadableContentInfo_SODragoon.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2DownloadableContentInfo_SOHunter.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2DownloadableContentInfo_SOInfantry.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2DownloadableContentInfo_SOItems.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2Effect_ActivateOverwatch.uc">

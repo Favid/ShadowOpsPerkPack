@@ -8,17 +8,17 @@ function bool ShowUpgradePopupIfNeeded()
 {
 	local TDialogueBoxData kDialogData;
 
-	if (ModVersion == class'X2DownloadableContentInfo_BlackOps'.default.ModVersion)
+	if (ModVersion == class'X2DownloadableContentInfo_ShadowOpsPerkPack'.default.ModVersion)
 		return false;
 
 	kDialogData.eType = eDialog_Normal;
-	kDialogData.strTitle = class'X2DownloadableContentInfo_BlackOps'.default.ModUpgradeLabel;
-	kDialogData.strText = class'X2DownloadableContentInfo_BlackOps'.default.ModUpgradeSummary;
-	kDialogData.strAccept = class'X2DownloadableContentInfo_BlackOps'.default.ModUpgradeAcceptLabel;
+	kDialogData.strTitle = class'X2DownloadableContentInfo_ShadowOpsPerkPack'.default.ModUpgradeLabel;
+	kDialogData.strText = class'X2DownloadableContentInfo_ShadowOpsPerkPack'.default.ModUpgradeSummary;
+	kDialogData.strAccept = class'X2DownloadableContentInfo_ShadowOpsPerkPack'.default.ModUpgradeAcceptLabel;
 
 	`HQPRES.UIRaiseDialog(kDialogData);
 
-	ModVersion = class'X2DownloadableContentInfo_BlackOps'.default.ModVersion;
+	ModVersion = class'X2DownloadableContentInfo_ShadowOpsPerkPack'.default.ModVersion;
 
 	return true;
 }
