@@ -19,7 +19,9 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Scrounger());
 	Templates.AddItem(ScroungerTrigger());
 	Templates.AddItem(SnakeBlood());
-	Templates.AddItem(Rage());
+
+    // TODO This ability causes the game to crash on startup. Need to investigate.
+	//Templates.AddItem(Rage());
 
 	return Templates;
 }
