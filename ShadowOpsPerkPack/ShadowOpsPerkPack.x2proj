@@ -37,6 +37,30 @@
     <Content Include="Config\XComStrategyTuning.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Content\FX_ShadowOps_Dragoon.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\Perk_ShadowOps_HunterMark.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\Perk_ShadowOps_ShieldProtocol.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\UILibrary_BlackOps.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\UILibrary_SOCombatEngineer.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\UILibrary_SODragoon.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\UILibrary_SOHunter.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\UILibrary_SOInfantry.upk">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Localization\XComGame.int">
       <SubType>Content</SubType>
     </Content>
