@@ -382,10 +382,10 @@ LocPromotionPopupText="<Bullet/> Renewal Protocol will get a unit that is bleedi
 
 [ShadowOps_StasisField X2AbilityTemplate]
 LocFriendlyName="Stasis Field"
-LocLongDescription="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage. <Ability:SelfCooldown/> turn cooldown."
+LocLongDescription="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage. Can be used once per mission."
 LocHelpText="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage."
 LocFlyOverText="Stasis Field"
-LocPromotionPopupText="<Bullet/> Stasis Field affects both allied and enemy units.<br/><Bullet/> Stasis Field has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Stasis Field affects both allied and enemy units.<br/><Bullet/> Stasis Field can be used once per mission.<br/>"
 
 [ShadowOps_PuppetProtocol X2AbilityTemplate]
 LocFriendlyName="Puppet Protocol"
