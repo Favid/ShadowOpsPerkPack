@@ -10,6 +10,9 @@
     <ProjectGuid>{d53e5350-3054-493e-a50e-12b7d97fb9f1}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Config\XComAI.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\XComEditor.ini">
       <SubType>Content</SubType>
     </Content>
