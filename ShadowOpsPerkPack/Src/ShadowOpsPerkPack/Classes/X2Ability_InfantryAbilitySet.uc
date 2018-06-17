@@ -10,6 +10,7 @@ var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, Adrenalin
 var config int FortressDefenseModifier;
 var config int RifleSuppressionAimBonus;
 var config array<ExtShotModifierInfo> TacticianModifiers;
+var config bool TacticianRiflesOnly;
 var config array<name> SuppressionAbilities;
 var config WeaponDamageValue AirstrikeDamage;
 var config int AirstrikeCharges;
@@ -344,7 +345,6 @@ static function X2AbilityTemplate FullAuto2()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
-	Template.AdditionalAbilities.AddItem('ShadowOps_FullAuto2');
 	Template.PostActivationEvents.AddItem('ShadowOps_FullAuto2');
 	// Template.bShowActivation = true;
 	Template.CinescriptCameraType = "StandardGunFiring";
@@ -1034,10 +1034,13 @@ static function X2AbilityTemplate Tactician()
 
 	Template = Passive('ShadowOps_Tactician', "img:///UILibrary_SOInfantry.UIPerk_tactician", false, Effect);
 
-	InventoryCondition = new class'X2Condition_UnitInventory';
-	InventoryCondition.RelevantSlot = eInvSlot_PrimaryWeapon;
-	InventoryCondition.RequireWeaponCategory = 'rifle';
-	Template.AbilityShooterConditions.AddItem(InventoryCondition);
+    if(default.TacticianRiflesOnly)
+    {
+	    InventoryCondition = new class'X2Condition_UnitInventory';
+	    InventoryCondition.RelevantSlot = eInvSlot_PrimaryWeapon;
+	    InventoryCondition.RequireWeaponCategory = 'rifle';
+	    Template.AbilityShooterConditions.AddItem(InventoryCondition);
+    }
 
 	return Template;
 }
