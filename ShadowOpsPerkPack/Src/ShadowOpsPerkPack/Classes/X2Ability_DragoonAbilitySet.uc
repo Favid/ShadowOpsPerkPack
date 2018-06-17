@@ -991,6 +991,16 @@ static function X2AbilityTemplate PhalanxProtocol()
 	Template.AbilityMultiTargetConditions.AddItem(TargetCondition);
 
 	AddCharges(Template, default.PhalanxProtocolCharges);
+    
+	// Gremlin animation code
+	Template.BuildNewGameStateFn = class'X2Ability_SpecialistAbilitySet'.static.SendGremlinToOwnerLocation_BuildGameState;
+	Template.BuildVisualizationFn = class'X2Ability_SpecialistAbilitySet'.static.GremlinRestoration_BuildVisualization;
+	Template.bSkipFireAction = true;
+	Template.bShowActivation = true;
+	Template.bStationaryWeapon = true;
+	Template.bSkipPerkActivationActions = true;
+	Template.PostActivationEvents.AddItem('ItemRecalled');
+	Template.TargetingMethod = class'X2TargetingMethod_GremlinAOE';
 
 	return Template;
 }
