@@ -4,7 +4,7 @@ class TemplateEditors extends Object config(GameCore);
 var config array<name> SuppressionBlockedAbilities;
 var config array<name> WeaponCostAbilities;
 var config array<name> SquadsightAbilities;
-var config array<name> LWClasses;
+var config array<name> ClassesToDisable;
 
 static function EditTemplates()
 {
@@ -25,7 +25,7 @@ static function KillLongWarDead()
 
 	SoldierClassManager = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager();
 
-	foreach default.LWClasses(TemplateName)
+	foreach default.ClassesToDisable(TemplateName)
 	{
 		SoldierClassManager.FindDataTemplateAllDifficulties(TemplateName, AllTemplates);
 		foreach AllTemplates(Template)
