@@ -24,6 +24,8 @@ var config name FreeAmmoForPocket;
 var config int FullAutoActions;
 var config int FullAutoCooldown, ZoneOfControlCooldown, ZoneOfControlLW2Cooldown;
 
+var config int NoiseMakerCharges;
+
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -66,6 +68,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Paragon());
 	Templates.AddItem(SonicBeacon());
 	Templates.AddItem(ThrowSonicBeacon());
+	Templates.AddItem(NoiseMaker());
 
 	return Templates;
 }
@@ -1539,4 +1542,16 @@ function ZoneOfControlOverwatchShotTaken_BuildVisualization(XComGameState Visual
 		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTree(BuildTrack, Context));
 		SoundAndFlyOver.SetSoundAndFlyOverParameters(none, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
 	}
+}
+
+static function X2AbilityTemplate NoiseMaker()
+{
+	local XMBEffect_AddUtilityItem Effect;
+
+	Effect = new class'XMBEffect_AddUtilityItem';
+	Effect.DataName = 'UltrasonicLure';
+    Effect.BaseCharges = default.NoiseMakerCharges;
+	Effect.SkipAbilities.AddItem('LaunchGrenade');
+
+	return Passive('ShadowOps_NoiseMaker', "img:///UILibrary_SOInfantry.UIPerk_sonicbeacon", true, Effect);
 }

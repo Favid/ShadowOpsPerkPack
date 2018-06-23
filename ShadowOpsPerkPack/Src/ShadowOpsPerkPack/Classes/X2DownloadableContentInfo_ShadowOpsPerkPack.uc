@@ -89,6 +89,9 @@ static function bool AbilityTagExpandHandler(string InString, out string OutStri
 	case "zoneofcontrollw2shots":
 		OutString = string(class'X2Ability_InfantryAbilitySet'.default.ZoneOfControlLW2Shots);
 		return true;
+	case "NoiseMakerCharges":
+		OutString = string(class'X2Ability_InfantryAbilitySet'.default.NoiseMakerCharges);
+		return true;
 	}
 	return false;
 }

@@ -921,6 +921,13 @@ LocLongDescription="Throw a sonic beacon which does no damage but attracts the a
 LocHelpText="Throw a sonic beacon which does no damage but attracts the attention of nearby enemies. Only usable from concealment."
 LocFlyOverText="Throw Sonic Beacon"
 
+[ShadowOps_NoiseMaker X2AbilityTemplate]
+LocFriendlyName="Noise Maker"
+LocLongDescription="Grants <Ability:NoiseMakerCharges/> free ultrasonic lure item to your inventory."
+LocHelpText="Grants <Ability:NoiseMakerCharges/> free ultrasonic lure item to your inventory."
+LocFlyOverText="Noise Maker"
+LocPromotionPopupText="<Bullet/> This stacks with uses from carried ultrasonic lures.<br/>"
+
 ; === Other abilities ===
 
 [ShadowOps_SwapAmmo X2AbilityTemplate]
