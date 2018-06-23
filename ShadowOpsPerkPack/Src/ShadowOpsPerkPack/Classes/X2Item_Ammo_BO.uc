@@ -9,10 +9,10 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 
-	Templates.AddItem(CreateFlechetteRounds());
-	Templates.AddItem(CreateHollowPointRounds());
-	Templates.AddItem(CreateTigerRounds());
-	Templates.AddItem(CreateDepletedEleriumRounds());
+	//Templates.AddItem(CreateFlechetteRounds());
+	//Templates.AddItem(CreateHollowPointRounds());
+	//Templates.AddItem(CreateTigerRounds());
+	//Templates.AddItem(CreateDepletedEleriumRounds());
 
 	return Templates;
 }

@@ -6,7 +6,7 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 
-	Templates.AddItem(CreateReinforcedVest());
+	// Templates.AddItem(CreateReinforcedVest());
 
 	return Templates;
 }
