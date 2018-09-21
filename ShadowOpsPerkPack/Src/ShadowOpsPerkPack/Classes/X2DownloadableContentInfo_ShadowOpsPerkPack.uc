@@ -10,17 +10,7 @@ var localized string ModUpgradeAcceptLabel;
 /// </summary>
 static event InstallNewCampaign(XComGameState StartState)
 {
-	CreateInitialUpgradeInfo(StartState);
 	class'XComGameState_KillTracker'.static.InitializeWithGameState(StartState);
-}
-
-static function CreateInitialUpgradeInfo(XComGameState StartState)
-{
-	local XComGameState_ShadowOpsUpgradeInfo UpgradeInfo;
-
-	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(StartState.CreateNewStateObject(class'XComGameState_ShadowOpsUpgradeInfo'));
-
-	UpgradeInfo.InitializeForNewGame();
 }
 
 /// <summary>
@@ -30,13 +20,7 @@ static function CreateInitialUpgradeInfo(XComGameState StartState)
 /// </summary>
 static event OnLoadedSavedGame()
 {
-	local XComGameState NewGameState;
 
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Shadow Ops Upgrade State");
-
-	CreateInitialUpgradeInfo(NewGameState);
-
-	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 }
 
 /// <summary>
