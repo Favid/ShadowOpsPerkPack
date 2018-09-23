@@ -318,13 +318,6 @@ LocHelpText="You gain additional Armor points based on your equipped armor."
 LocFlyOverText="Tank"
 LocPromotionPopupText="<Bullet/> A Dragoon with Tank and an EXO or WAR suit can absorb truly ridiculous amounts of damage, especially if combined with a Plated Vest or Reinforced Vest.<br/><Bullet/> The shield from Shield Protocol doesn't benefit from armor directly, but any excess damage that isn't absorbed by the shield will be reduced by armor. Armor can completely protect against small amounts of damage as long as at least one point gets blocked by the shield.<br/><Bullet/> Light and medium armors provide one extra point of Armor, while heavy armor provides two extra points of Armor.<br/>"
 
-[ShadowOps_Finesse X2AbilityTemplate]
-LocFriendlyName="Finesse"
-LocLongDescription="Gain <Ability:+ToHit/> Aim and <Ability:+Mobility/> Mobility while equipped with a rifle."
-LocHelpText="Gain <Ability:+ToHit/> Aim and <Ability:+Mobility/> Mobility while equipped with a rifle."
-LocFlyOverText="Finesse"
-LocPromotionPopupText="<Bullet/> The extra mobility from Finesse can help you to get a flank or to reach the objective quickly, but be careful you don't get too far ahead of the rest of the squad.<br/><Bullet> The bonuses from Finesse are lost if you equip a cannon. Weapons that can be equipped by any unit that can equip a rifle, such as the Boltcaster, count as rifles for Finesse.<br/><Bullet/> Learning Finesse will automatically equip the highest-level rifle in your inventory.<br/>"
-
 [ShadowOps_StealthProtocol X2AbilityTemplate]
 LocFriendlyName="Stealth Protocol"
 LocLongDescription="Give a friendly unit concealment."
@@ -348,7 +341,7 @@ LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powe
 
 [ShadowOps_ECM X2AbilityTemplate]
 LocFriendlyName="ECM"
-LocLongDescription="Enemies have <Ability:ECMDetectionModifier/>% smaller detection range against all squad members. Also slightly reduces squad infiltration time while on missions."
+LocLongDescription="Enemies have <Ability:ECMDetectionModifier/>% smaller detection range against all squad members."
 LocHelpText="Enemies have <Ability:ECMDetectionModifier/>% smaller detection range against all squad members."
 LocFlyOverText="ECM"
 LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or evacs.<br/>"
@@ -429,13 +422,6 @@ LocHelpText="All GREMLIN abilities gain an additional charge."
 LocFlyOverText="Supercharge"
 LocPromotionPopupText="<Bullet/> GREMLIN abilities include Shield Protocol, Renewal Protocol, and Stealth Protocol.<br/>"
 
-[ShadowOps_ReverseEngineering X2AbilityTemplate]
-LocFriendlyName="Reverse Engineering"
-LocLongDescription="Hacking an enemy unit grants a permanent boost to Hacking score."
-LocHelpText="Hacking an enemy unit grants a permanent boost to Hacking score."
-LocFlyOverText="Reverse Engineering"
-LocPromotionPopupText="<Bullet/> Abilities that hack enemy units include Haywire Protocol, Puppet Protocol, Skulljack, and Skullmine. <br/><Bullet/> You get the boost to Hacking score even if the hack fails. <br/>"
-
 [ShadowOps_Scout X2AbilityTemplate]
 LocFriendlyName="Scout"
 LocLongDescription="Grants 1 free battle scanner item to your inventory."
@@ -470,13 +456,6 @@ LocLongDescription="You and all allies within <Ability:InspirationMaxTiles/> til
 LocHelpText="You and all allies within <Ability:InspirationMaxTiles/> tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
 LocFlyOverText="Inspiration"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
-
-[ShadowOps_DigitalWarfare X2AbilityTemplate]
-LocFriendlyName="Digital Warfare"
-LocLongDescription="Gain a second PCS slot."
-LocHelpText="Gain a second PCS slot."
-LocFlyOverText="Digital Warfare"
-LocPromotionPopupText="<Bullet/> You cannot equip two PCSes of the same type.<br/>"
 
 [ShadowOps_ShieldSurge X2AbilityTemplate]
 LocFriendlyName="Shield Surge"

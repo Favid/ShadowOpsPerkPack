@@ -1,3 +1,4 @@
+// Adds the Kills button to the armory screen (used to display kills for use with the Anatomist ability)
 class UIScreenListener_UIArmory extends UIScreenListener dependson(XComGameState_KillTracker);
 
 var localized string m_strKills, m_strKillsTitle, m_strUnknown;

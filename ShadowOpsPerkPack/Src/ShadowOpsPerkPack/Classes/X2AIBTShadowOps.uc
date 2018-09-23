@@ -1,3 +1,4 @@
+// Used for SonicBeacon, which is not currently working or implemented
 class X2AIBTShadowOps extends X2AIBTDefaultActions;
 
 static event bool FindBTActionDelegate(name strName, optional out delegate<BTActionDelegate> dOutFn, optional out name NameParam, optional out name MoveProfile)

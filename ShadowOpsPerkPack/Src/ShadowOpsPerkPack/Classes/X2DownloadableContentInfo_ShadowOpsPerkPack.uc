@@ -31,6 +31,8 @@ static event OnPostTemplatesCreated()
 	local array<object> DefaultObjects;
 	local object Obj;
 
+    `LOG("WOTC ShadowOpsPerkPack is installed");
+
 	class'TemplateEditors'.static.EditTemplates();
 	class'TemplateEditors_CombatEngineer'.static.EditTemplates();
 	class'TemplateEditors_Dragoon'.static.EditTemplates();

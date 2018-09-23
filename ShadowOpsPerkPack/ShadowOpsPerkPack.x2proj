@@ -40,9 +40,6 @@
     <Content Include="Config\XComShadowOps.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\XComStrategyTuning.ini">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Content\FX_ShadowOps_Dragoon.upk">
       <SubType>Content</SubType>
     </Content>
@@ -79,18 +76,6 @@
     <Content Include="Src\LW_Tuple\Classes\LWTuple.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\AcademyUnlocks_CombatEngineer.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\AcademyUnlocks_Dragoon.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\AcademyUnlocks_Hunter.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\AcademyUnlocks_Infantry.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\Examples.uc">
       <SubType>Content</SubType>
     </Content>
@@ -112,28 +97,7 @@
     <Content Include="Src\ShadowOpsPerkPack\Classes\TemplateEditors_Items.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\UIArmory_Implants_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\UIInventory_Implants_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\UIScreenListener_UIArmory.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\UIScreenListener_UIAvengerHUD.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\UIScreenListener_UIInventory_Implants.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\UISoldierHeader_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\UIUtilities_Strategy_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\UnitUtilities_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2AbilityCharges_GremlinTech.uc">
@@ -169,16 +133,10 @@
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2Ability_InfantryAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2Ability_ItemGranted_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2Action_Airstrike.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2AIBTShadowOps.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2Condition_AlwaysReady.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2Condition_CanActivateAbility.uc">
@@ -328,12 +286,6 @@
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2EventListener_KillTracker.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2Item_Ammo_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\X2Item_Armor_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2Item_SonicBeacon.uc">
       <SubType>Content</SubType>
     </Content>
@@ -347,9 +299,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\XComGameState_KillTracker.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOpsPerkPack\Classes\XComGameState_ShadowOpsUnitInfo.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\XMBAbility.uc">
