@@ -19,7 +19,9 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Scrounger());
 	Templates.AddItem(ScroungerTrigger());
 	Templates.AddItem(SnakeBlood());
-
+	Templates.AddItem(AbsolutelyCritical());
+	Templates.AddItem(DevilsLuck());
+    
     // TODO This ability causes the game to crash on startup. Need to investigate.
 	//Templates.AddItem(Rage());
 
@@ -207,4 +209,24 @@ function Rage_EffectAdded(X2Effect_Persistent PersistentEffect, const out Effect
 	{
 		NewGameState.PurgeGameStateForObjectID(NewAIUnitData.ObjectID);
 	}
+}
+
+static function X2AbilityTemplate AbsolutelyCritical()
+{
+	local XMBEffect_ConditionalBonus             Effect;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AbilityTargetConditions.AddItem(default.NoCoverCondition);
+	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
+
+	return Passive('ShadowOps_AbsolutelyCritical', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+}
+
+static function X2AbilityTemplate DevilsLuck()
+{
+	local X2AbilityTemplate Template;
+
+	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_SOCombatEngineer.UIPerk_devilsluck", true, new class'X2Effect_DevilsLuck');
+
+	return Template;
 }

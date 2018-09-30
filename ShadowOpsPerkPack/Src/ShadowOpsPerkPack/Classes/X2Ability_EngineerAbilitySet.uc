@@ -500,7 +500,7 @@ static function X2AbilityTemplate DenseSmoke()
 	Effect.IncludeItemNames.AddItem('SmokeGrenade');
 	Effect.IncludeItemNames.AddItem('SmokeGrenadeMk2');
 
-	return Passive('ShadowOps_DenseSmoke', "img:///UILibrary_SOCombatEngineer.UIPerk_densesmoke", true, Effect);
+	return Passive('ShadowOps_DenseSmoke', "img:///UILibrary_SOCombatEngineer.UIPerk_densesmoke", false, Effect);
 }
 
 static function X2AbilityTemplate HeatAmmo()

@@ -78,6 +78,10 @@ static function bool AbilityTagExpandHandler(string InString, out string OutStri
 	case "NoiseMakerCharges":
 		OutString = string(class'X2Ability_InfantryAbilitySet'.default.NoiseMakerCharges);
 		return true;
+	case "ExpandedSmokeBonusRadius":
+		OutString = string(int(class'X2Ability_EngineerAbilitySet'.default.DenseSmokeBonusRadius));
+		return true;
 	}
+
 	return false;
 }

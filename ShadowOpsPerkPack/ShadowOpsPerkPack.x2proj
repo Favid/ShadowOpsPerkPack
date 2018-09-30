@@ -202,6 +202,9 @@
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2Effect_DangerZone.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOpsPerkPack\Classes\X2Effect_DevilsLuck.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2Effect_DropLoot.uc">
       <SubType>Content</SubType>
     </Content>
