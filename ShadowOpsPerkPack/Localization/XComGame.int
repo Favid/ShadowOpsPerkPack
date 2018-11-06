@@ -851,7 +851,14 @@ LocFriendlyName="Ready for Anything"
 LocLongDescription="When you make a standard attack with your <Ability:WeaponName/> you automatically enter overwatch."
 LocHelpText="Fire a shot at a target, then enter overwatch."
 LocFlyOverText="Ready for Anything"
-LocPromotionPopupText="<Bullet/> You won't enter overwatch if you are out of ammo.<br/>"
+LocPromotionPopupText="<Bullet/> You won't enter overwatch if you are out of ammo.<br/><Bullet/> If the shot does not end your turn, then you will not enter overwatch. This may occur if you have the Light 'Em Up ability, your weapon is equipped with a Hair Trigger, or you kill a Lost.<br/>"
+
+[ShadowOps_ReadyForAnythingOverwatch X2AbilityTemplate]
+LocFriendlyName="Ready for Anything"
+LocLongDescription="When you make a standard attack with your <Ability:WeaponName/> you automatically enter overwatch."
+LocHelpText="Fire a shot at a target, then enter overwatch."
+LocFlyOverText="Ready for Anything"
+LocPromotionPopupText="<Bullet/> You won't enter overwatch if you are out of ammo.<br/><Bullet/> If the shot does not end your turn, then you will not enter overwatch. This may occur if you also have the Light 'Em Up ability or your weapon is equipped with a Hair Trigger.<br/>"
 
 [ShadowOps_ImprovedSuppression X2AbilityTemplate]
 LocFriendlyName="Improved Suppression"

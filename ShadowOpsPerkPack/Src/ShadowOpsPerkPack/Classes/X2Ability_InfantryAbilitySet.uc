@@ -1051,11 +1051,24 @@ static function X2AbilityTemplate Tactician()
 static function X2AbilityTemplate ReadyForAnything()
 {
 	local X2AbilityTemplate Template;
+	local int i;
+	local X2AbilityCost_ActionPoints ActionPointCost;
 
 	Template = class'X2Ability_WeaponCommon'.static.Add_StandardShot('ShadowOps_ReadyForAnything');
 	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_readyforanything";
 	Template.OverrideAbilities.AddItem('StandardShot');
 	Template.bDontDisplayInAbilitySummary = false;
+
+	// This shot shouldn't consume all action points if the user has light em up
+	for (i = 0; i < Template.AbilityCosts.Length; i++)
+	{
+		ActionPointCost = X2AbilityCost_ActionPoints(Template.AbilityCosts[i]);
+		if (ActionPointCost != none)
+		{
+            ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('LW2WotC_LightEmUp');
+			break;
+		}
+	}
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_ReadyForAnythingOverwatch');
 
