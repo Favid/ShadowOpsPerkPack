@@ -4,6 +4,7 @@ class X2Ability_EngineerAbilitySet extends XMBAbility
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
 var config int BreachEnvironmentalDamage;
 var config float BreachRange, BreachRadius;
+var config bool BreachShotgunOnly;
 var config array<name> DangerZoneAbilityName;
 var config array<int> DangerZoneAbilityBonusRadius;
 var config int MovingTargetDefenseBonus, MovingTargetDodgeBonus;
@@ -203,10 +204,13 @@ static function X2AbilityTemplate Breach()
 	StandardAim.bAllowCrit = false;
 	Template.AbilityToHitCalc = StandardAim;
 	
-	InventoryCondition = new class'X2Condition_UnitInventory';
-	InventoryCondition.RelevantSlot = eInvSlot_PrimaryWeapon;
-	InventoryCondition.RequireWeaponCategory = 'shotgun';
-	Template.AbilityShooterConditions.AddItem(InventoryCondition);
+	if (default.BreachShotgunOnly)
+	{
+		InventoryCondition = new class'X2Condition_UnitInventory';
+		InventoryCondition.RelevantSlot = eInvSlot_PrimaryWeapon;
+		InventoryCondition.RequireWeaponCategory = 'shotgun';
+		Template.AbilityShooterConditions.AddItem(InventoryCondition);
+	}
 
 	WeaponDamageEffect = new class'X2Effect_Breach';
 	WeaponDamageEffect.EnvironmentalDamageAmount = default.BreachEnvironmentalDamage;
@@ -532,8 +536,9 @@ static function X2AbilityTemplate Entrench()
 	local X2Condition_UnitProperty          PropertyCondition;
 	local X2Effect_PersistentStatChange	    PersistentStatChangeEffect;
 	local X2AbilityTrigger_PlayerInput      InputTrigger;
-	local X2Condition_UnitEffects UnitEffectsCondition;
+	local X2Condition_UnitEffects			UnitEffectsCondition;
 	local array<name>                       SkipExclusions;
+	local X2Effect_RemoveEffects			RemoveEffects;
 	
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Entrench');
 	Template.OverrideAbilities.AddItem('HunkerDown');
@@ -581,6 +586,10 @@ static function X2AbilityTemplate Entrench()
 	PersistentStatChangeEffect.DuplicateResponse = eDupe_Refresh;
 	PersistentStatChangeEffect.EffectAddedFn = Entrench_EffectAdded;
 	Template.AddTargetEffect(PersistentStatChangeEffect);
+
+	RemoveEffects = new class'X2Effect_RemoveEffects';
+	RemoveEffects.EffectNamesToRemove.AddItem(class'X2StatusEffects'.default.BurningName);
+	Template.AddTargetEffect(RemoveEffects);
 
 	Template.AddTargetEffect(class'X2Ability_SharpshooterAbilitySet'.static.SharpshooterAimEffect());
 

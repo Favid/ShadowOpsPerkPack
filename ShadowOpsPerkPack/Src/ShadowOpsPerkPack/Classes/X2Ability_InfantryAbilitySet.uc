@@ -1066,6 +1066,7 @@ static function X2AbilityTemplate ReadyForAnything()
 		if (ActionPointCost != none)
 		{
             ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('LW2WotC_LightEmUp');
+            ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('LightEmUp');
 			break;
 		}
 	}

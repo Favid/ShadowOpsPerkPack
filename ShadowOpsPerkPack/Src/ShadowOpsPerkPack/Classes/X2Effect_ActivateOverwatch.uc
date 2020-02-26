@@ -51,6 +51,7 @@ static function EventListenerReturn EventHandler(Object EventData, Object EventS
 	local StateObjectReference OverwatchRef;
 	local XComGameState NewGameState;
 	local name AbilityName;
+	local XComGameState_Item SourceWeapon;
 
 	`Log(string(GetFuncName()));
 
@@ -77,7 +78,12 @@ static function EventListenerReturn EventHandler(Object EventData, Object EventS
 		if (AbilityState.SourceWeapon.ObjectID != 0 && AbilityState.SourceWeapon != OverwatchState.SourceWeapon)
 			continue;
 
-		// Found an overwatch ability. First, make a couple of changes before we activate the ability.
+		// Verify that the weapon has ammo
+		SourceWeapon = OverwatchState.GetSourceWeapon();
+		if (SourceWeapon.Ammo == 0)
+			continue;
+
+		// Found a valid overwatch ability. First, make a couple of changes before we activate the ability.
 
 		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState(string(GetFuncName()));
 		UnitState = XComGameState_Unit(NewGameState.ModifyStateObject(UnitState.Class, UnitState.ObjectID));
