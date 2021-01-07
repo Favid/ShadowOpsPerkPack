@@ -922,6 +922,8 @@ static function X2AbilityTemplate Rocketeer()
 
 	BySlotEffect = new class'XMBEffect_AddItemCharges';
 	BySlotEffect.ApplyToSlots.AddItem(eInvSlot_HeavyWeapon);
+	BySlotEffect.ApplyToSlots.AddItem(eInvSlot_AuxiliaryWeapon);
+	BySlotEffect.ApplyToSlots.AddItem(eInvSlot_ExtraBackpack);
 	Template.AddTargetEffect(BySlotEffect);
 
 	return Template;
