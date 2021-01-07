@@ -18,6 +18,7 @@ var config int AgainstTheOddsAimBonus, AgainstTheOddsMax;
 var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
 var config int SonicBeaconCharges, SonicBeaconMoveTurns;
 var config int ZoneOfControlLW2Shots;
+var config array<name> CoupDeGraceRequiredWeaponCategories;
 
 var config name FreeAmmoForPocket;
 
@@ -1136,11 +1137,15 @@ static function X2AbilityTemplate ImprovedSuppression()
 static function X2AbilityTemplate CoupDeGrace()
 {
 	local XMBEffect_AbilityCostRefund Effect;
+	local X2Condition_WeaponCategory Condition;
 
 	Effect = new class'XMBEffect_AbilityCostRefund';
 	Effect.TriggeredEvent = 'CoupDeGrace';
 	Effect.AbilityTargetConditions.AddItem(default.DeadCondition);
-	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
+
+	Condition = new class'X2Condition_WeaponCategory';
+	Condition.IncludeWeaponCategories = default.CoupDeGraceRequiredWeaponCategories;
+	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	return Passive('ShadowOps_CoupDeGrace', "img:///UILibrary_SOInfantry.UIPerk_coupdegrace", false, Effect);
 }

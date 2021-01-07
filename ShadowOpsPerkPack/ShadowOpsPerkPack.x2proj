@@ -178,6 +178,9 @@
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2Condition_Untouchable.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOpsPerkPack\Classes\X2Condition_WeaponCategory.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOpsPerkPack\Classes\X2DownloadableContentInfo_ShadowOpsPerkPack.uc">
       <SubType>Content</SubType>
     </Content>
